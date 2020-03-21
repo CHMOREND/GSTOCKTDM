@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:screenOrientation="userPortrait"
+    android:paddingTop="?attr/actionBarSize"
+    tools:visibility="visible">
+
+    <Button
+        android:id="@+id/BtEntreeMarchandise"
+        android:layout_width="273dp"
+        android:layout_height="98dp"
+        android:backgroundTint="#AAC886"
+        android:text="@string/entr_e_marchandise"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/BtSoriteMarchandise"
+        app:layout_constraintEnd_toEndOf="@+id/BtInventaire"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/BtInventaire"
+        app:layout_constraintTop_toBottomOf="@+id/BtInventaire" />
+
+    <Button
+        android:id="@+id/BtSoriteMarchandise"
+        android:layout_width="276dp"
+        android:layout_height="92dp"
+        android:layout_marginBottom="56dp"
+        android:backgroundTint="#AAC886"
+        android:text="@string/sortie_marchandise"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/BtEntreeMarchandise"
+        app:layout_constraintHorizontal_bias="0.353"
+        app:layout_constraintStart_toStartOf="@+id/BtEntreeMarchandise" />
+
+    <Button
+        android:id="@+id/BtInventaire"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="0dp"
+        android:backgroundTint="#AAC886"
+        android:text="@string/inventaire"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@id/imageView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="271dp"
+        android:layout_height="147dp"
+        android:src="@drawable/tdm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="357dp"
+        android:layout_height="54dp"
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="512dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

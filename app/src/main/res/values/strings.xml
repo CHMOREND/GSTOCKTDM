@@ -1,0 +1,11 @@
+<resources>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="app_name">Gestion du stock (scanner)</string>
+    <string name="entr_e_marchandise">Entrée marchandise</string>
+    <string name="sortie_marchandise">Sortie marchandise</string>
+    <string name="inventaire">Inventaire</string>
+    <string name="retour">Retour</string>
+    <string name="mettreajour">Mettre à jour l\'inventaire</string>
+</resources>

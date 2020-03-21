@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:screenOrientation="portrait"
+    tools:context=".activity_inventaire">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Code EAN"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNumeroD" />
+
+    <TextView
+        android:id="@+id/textViewDesignation"
+        android:layout_width="163dp"
+        android:layout_height="20dp"
+        android:layout_gravity="left"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Stanford"
+        android:textColor="#0B0B0B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toEndOf="@+id/textViewNumeroD"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDesignation" />
+
+    <TextView
+        android:id="@+id/textViewQtStock"
+        android:layout_width="54dp"
+        android:layout_height="19dp"
+        android:layout_gravity="left"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
+        android:text="0"
+        android:textAlignment="viewStart"
+        android:textColor="#0B0B0B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.008"
+        app:layout_constraintStart_toEndOf="@+id/textViewNumeroD"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDesignation2" />
+
+    <Button
+        android:id="@+id/btinventaireretour"
+        android:layout_width="354dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#AAC886"
+        android:text="@string/retour"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btmetajourinventaire"
+        android:layout_width="354dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="380dp"
+        android:backgroundTint="#AAC886"
+        android:text="@string/mettreajour"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/btinventaireretour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btMoins"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginBottom="60dp"
+        android:background="#AAC886"
+        android:text="-"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/btmetajourinventaire"
+        app:layout_constraintEnd_toStartOf="@+id/textViewQt"
+        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPlus"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginEnd="88dp"
+        android:layout_marginBottom="60dp"
+        android:background="#AAC886"
+        android:text="+"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/btmetajourinventaire"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="358dp"
+        android:layout_height="42dp"
+        android:text="Nombre de paire scannée"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewQt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewQt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:text="0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/btmetajourinventaire"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPlus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btMoins" />
+
+    <TextView
+        android:id="@+id/textViewNumero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Numéro"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+
+        android:id="@+id/textViewDesignation"
+        android:layout_width="166dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="4dp"
+        android:text="Désignation"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+
+        android:id="@+id/textViewDesignation2"
+        android:layout_width="169dp"
+        android:layout_height="19dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="36dp"
+        android:text="Actuellement en stock"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.982"
+        app:layout_constraintStart_toEndOf="@+id/textViewNumero2"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDesignation" />
+
+    <TextView
+        android:id="@+id/textViewNumeroD"
+        android:layout_width="140dp"
+        android:layout_height="20dp"
+        android:layout_gravity="left"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="IB"
+        android:textColor="#0B0B0B"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNumero" />
+
+    <TextView
+        android:id="@+id/textViewCodeEan"
+        android:layout_width="140dp"
+        android:layout_height="20dp"
+        android:layout_gravity="left"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="1234567890123"
+        android:textColor="#0B0B0B"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <Button
+
+        android:id="@+id/scan_button"
+        style="@style/Widget.AppCompat.Button.Small"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:autoText="false"
+        android:background="#7C3030"
+        android:text="SCAN"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewQt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
