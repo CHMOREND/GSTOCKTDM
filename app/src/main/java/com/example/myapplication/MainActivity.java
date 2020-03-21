@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         this.btentreemarchandise = (Button) findViewById(R.id.BtEntreeMarchandise);
         this.btsortiemarchandise = (Button) findViewById(R.id.BtSoriteMarchandise);
 
+
+
         btinventaire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
