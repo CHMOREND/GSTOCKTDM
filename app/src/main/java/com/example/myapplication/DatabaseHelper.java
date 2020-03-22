@@ -12,7 +12,7 @@ import java.util.List;
 public class  DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ScannerDatabase5.db";
+    private static final String DATABASE_NAME = "ScannerDatabase6.db";
     private static final String TABLE_INVENTAIRE = "inventaire";
     private static final String TABLE_PARAMETRES = "parametres";
     private static final String KEY_ID = "id";
@@ -56,6 +56,27 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_INVENTAIRE,null,values);
         db.close();
+
+    }
+
+    public Parametres getParametre(Integer id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_PARAMETRES, new String[]{"id", "adresse", "port"}, "id =?",
+                new String[]{id.toString()}, null, null, null, null);
+
+        if (cursor.getCount() == 0) {
+
+            return null;
+
+        } else {
+
+            cursor.moveToFirst();
+            Parametres parametre = new Parametres(0,"",0);
+            parametre.setId(cursor.getInt(0));
+            parametre.setAdresse(cursor.getString(1));
+            parametre.setPort(cursor.getInt(2));
+            return    parametre;
+        }
 
     }
 

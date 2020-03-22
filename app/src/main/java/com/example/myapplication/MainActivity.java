@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private Button  btinventaire;
     private Button  btsortiemarchandise;
     private Button  btentreemarchandise;
+    public  String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,22 @@ public class MainActivity extends AppCompatActivity {
         this.btentreemarchandise = (Button) findViewById(R.id.BtEntreeMarchandise);
         this.btsortiemarchandise = (Button) findViewById(R.id.BtSoriteMarchandise);
 
-        //SQLiteDatabase db = new SQL
+        DatabaseHelper db = new DatabaseHelper(this);
+
+        Parametres parametres = new Parametres(0, "", 0);
+        parametres = db.getParametre(1);  // lecture des paramètres
+        if (parametres == null){
+
+            Intent parametreAcitivty = new Intent(getApplicationContext(),activity_Parametre.class);
+            startActivity(parametreAcitivty);
+            finish();
+        } else
+        {
+            url = parametres.getAdresse()+':'+ parametres.getPort()+'/';
+            // ici contrôle de la connexion avec le serveur REST
+        }
+
+
 
 
 

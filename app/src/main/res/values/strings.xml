@@ -8,4 +8,5 @@
     <string name="inventaire">Inventaire</string>
     <string name="retour">Retour</string>
     <string name="mettreajour">Mettre à jour l\'inventaire</string>
+    <string name="ParamSauve">Sauvegarde</string>
 </resources>
