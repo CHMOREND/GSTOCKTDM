@@ -28,14 +28,14 @@
         android:id="@+id/BtSoriteMarchandise"
         android:layout_width="276dp"
         android:layout_height="92dp"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="4dp"
         android:backgroundTint="#AAC886"
         android:text="@string/sortie_marchandise"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/BtEntreeMarchandise"
-        app:layout_constraintHorizontal_bias="0.353"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/BtEntreeMarchandise" />
 
     <Button

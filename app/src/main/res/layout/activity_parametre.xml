@@ -20,15 +20,15 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextPort"
         android:layout_width="87dp"
         android:layout_height="42dp"
-        android:layout_marginStart="140dp"
+        android:layout_marginStart="132dp"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="number"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextAdresse" />
 
     <TextView
         android:id="@+id/textView"
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editTextAdresse"
         android:layout_width="176dp"
         android:layout_height="43dp"
         android:layout_marginStart="8dp"

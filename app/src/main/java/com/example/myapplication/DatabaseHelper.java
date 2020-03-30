@@ -59,6 +59,18 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void addParametre(Parametres parametre){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("adresse",parametre.getAdresse());
+        values.put("port",parametre.getPort());
+
+        db.insert(TABLE_PARAMETRES,null,values);
+        db.close();
+
+    }
+
+
     public Parametres getParametre(Integer id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_PARAMETRES, new String[]{"id", "adresse", "port"}, "id =?",
