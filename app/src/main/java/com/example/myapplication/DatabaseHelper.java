@@ -144,6 +144,15 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(inventaire.getId())});
 
     }
+    public int updateParametre(Parametres parametre){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("adresse",parametre.getAdresse());
+        values.put("port",parametre.getPort());
+        return db.update(TABLE_PARAMETRES,values,  "id =?",
+                new String[]{String.valueOf(parametre.getId())});
+
+    }
     public void deleteInventaire(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_INVENTAIRE,null,null);

@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         {
             url = "http://"+parametres.getAdresse()+':'+ parametres.getPort()+'/';
 
-//            url = "http://192.168.10.58:8081/article?ean=8058333424644";
+             url = "http://192.168.10.58:8081/article?ean=8058333424644";
 
-//           url = "https://api.androidhive.info/contacts/";
+           //url = "https://api.androidhive.info/contacts/";
             // ici contrôle de la connexion avec le serveur REST
             new GetArticle().execute();
 
@@ -105,7 +107,32 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
-                    JSONObject jsonObjet = new JSONObject(jsonStr);
+                    if (jsonStr.contains("ORION INFORMATIQUE SA")){
+
+                    } else {
+
+                        JSONObject jsonObjet = new JSONObject(jsonStr);
+                        JSONArray article = jsonObjet.getJSONArray("article");
+                        for (int i = 0; i < article.length();i++){
+                            JSONObject a = article.getJSONObject(i);
+                            String id = a.getString("id");
+                            String numero = a.getString("numero");
+                            String designation = a.getString("designation");
+                            String ean  = a.getString("ean");
+                            String qtstock  = a.getString("qtstock");
+
+                            HashMap<String,String> artic = new HashMap<>();
+                            artic.put("id",id);
+                            artic.put("numero",numero);
+                            artic.put("designation",designation);
+                            artic.put("ean",ean);
+                            artic.put("qtstock",qtstock);
+
+                            // articleList.add(artic);
+
+                        }
+
+                    }
                 } catch (final JSONException e) {
                     Log.e(TAG, "JSON erreur paramètres : " + e.getMessage());
                     runOnUiThread(new Runnable() {
@@ -121,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(MainActivity.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
-
+                        Intent paramAcitivty = new Intent(getApplicationContext(),activity_Parametre.class);
+                        startActivity(paramAcitivty);
+                        finish();
                     }
                 });
             }

@@ -25,7 +25,7 @@ public class activity_Parametre extends AppCompatActivity {
         Parametres parametres = new Parametres(0, "", 0);
         parametres = db.getParametre(1);  // lecture des paramètres
         if (parametres == null) {
-            adresse.setText("192.168.1.");
+            adresse.setText("192.168.1.2");
             port.setText("8081");
         } else {
             adresse.setText(parametres.adresse);
@@ -36,9 +36,18 @@ public class activity_Parametre extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper db = new DatabaseHelper(getApplicationContext());
                 Parametres parametre = new Parametres(0, "", 0);
-                parametre.setAdresse(adresse.getText().toString());
-                parametre.setPort(Integer.parseInt(port.getText().toString()));
-                db.addParametre(parametre);
+                parametre = db.getParametre(1);  // lecture des paramètres
+                if (parametre == null) {
+                    Parametres parametre2 = new Parametres(0, "", 0);
+                    parametre2.setAdresse(adresse.getText().toString());
+                    parametre2.setPort(Integer.parseInt(port.getText().toString()));
+                    db.addParametre(parametre2);
+                } else {
+                    parametre.setAdresse(adresse.getText().toString());
+                    parametre.setPort(Integer.parseInt(port.getText().toString()));
+                    db.updateParametre(parametre);
+
+                }
 
                 Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(inventaireAcitivty);
