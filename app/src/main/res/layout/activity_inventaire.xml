@@ -21,15 +21,14 @@
 
     <TextView
         android:id="@+id/textViewDesignation"
-        android:layout_width="163dp"
-        android:layout_height="20dp"
+        android:layout_width="167dp"
+        android:layout_height="18dp"
         android:layout_gravity="left"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:text="Stanford"
         android:textColor="#0B0B0B"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textViewNumeroD"
         app:layout_constraintTop_toBottomOf="@+id/textViewDesignation" />
 
@@ -171,8 +170,8 @@
 
     <TextView
         android:id="@+id/textViewNumeroD"
-        android:layout_width="140dp"
-        android:layout_height="20dp"
+        android:layout_width="123dp"
+        android:layout_height="18dp"
         android:layout_gravity="left"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
@@ -200,13 +199,13 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:autoText="false"
         android:background="#7C3030"
         android:text="SCAN"
         android:textColor="#FFFFFF"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.522"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewQt" />
 

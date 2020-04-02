@@ -12,7 +12,7 @@
 
     <Button
         android:id="@+id/BtEntreeMarchandise"
-        android:layout_width="260dp"
+        android:layout_width="270dp"
         android:layout_height="77dp"
         android:backgroundTint="#AAC886"
         android:text="@string/entr_e_marchandise"
@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/BtSoriteMarchandise"
-        android:layout_width="276dp"
+        android:layout_width="270dp"
         android:layout_height="77dp"
         android:layout_marginBottom="4dp"
         android:backgroundTint="#AAC886"
@@ -40,7 +40,7 @@
 
     <Button
         android:id="@+id/BtInventaire"
-        android:layout_width="0dp"
+        android:layout_width="270dp"
         android:layout_height="77dp"
         android:layout_marginTop="0dp"
         android:backgroundTint="#AAC886"
