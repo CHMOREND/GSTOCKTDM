@@ -9,8 +9,8 @@
 
     <Button
         android:id="@+id/btSortieMarchandiseReretour"
-        android:layout_width="354dp"
-        android:layout_height="62dp"
+        android:layout_width="318dp"
+        android:layout_height="55dp"
         android:backgroundTint="#AAC886"
         android:text="@string/retour"
         android:textColor="#FFFFFF"
