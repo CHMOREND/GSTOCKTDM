@@ -1,15 +1,13 @@
-package com.example.myapplication;
+package ch.orioninformatique.gstocktdm;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,8 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         {
             url = "http://"+parametres.getAdresse()+':'+ parametres.getPort()+'/';
 
-             url = "http://192.168.10.58:8081/article?ean=8058333424644";
+//          url = "http://192.168.10.58:8081/article?ean=8058333424644";
+  //        url = "http://192.168.10.58:8081/articles";
 
            //url = "https://api.androidhive.info/contacts/";
             // ici contrôle de la connexion avec le serveur REST
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
 
                         JSONObject jsonObjet = new JSONObject(jsonStr);
-                        JSONArray article = jsonObjet.getJSONArray("article");
+                        JSONArray article = jsonObjet.getJSONArray("articles");
                         for (int i = 0; i < article.length();i++){
                             JSONObject a = article.getJSONObject(i);
                             String id = a.getString("id");

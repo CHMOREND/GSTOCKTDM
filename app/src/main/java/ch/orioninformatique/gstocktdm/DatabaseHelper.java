@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package ch.orioninformatique.gstocktdm;
 
 import android.content.ContentValues;
 import android.content.Context;

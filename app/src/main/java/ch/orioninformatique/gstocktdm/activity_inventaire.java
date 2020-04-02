@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package ch.orioninformatique.gstocktdm;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;

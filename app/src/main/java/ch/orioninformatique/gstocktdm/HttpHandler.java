@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package ch.orioninformatique.gstocktdm;
 
 import android.util.Log;
 
@@ -11,10 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.HttpUrl;
 
 public class HttpHandler {
     private static  final String TAG = HttpHandler.class.getSimpleName();
