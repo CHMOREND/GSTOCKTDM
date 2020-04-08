@@ -1,19 +1,40 @@
 package ch.orioninformatique.gstocktdm;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.VectorEnabledTintResources;
+
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.app.Activity;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.symbol.emdk.EMDKManager;
+import com.symbol.emdk.EMDKResults;
+import com.symbol.emdk.VersionManager;
+import com.symbol.emdk.scanandpair.ScanAndPairManager;
+import com.zebra.savanna.Symbology;
+import com.zebra.savanna.UPCLookup;
+import com.zebra.savanna.Models.Errors.Error;
+import com.zebra.savanna.SavannaAPI;
+import ch.orioninformatique.gstocktdm.BarcodeScannerEngine;
 
+import java.util.Arrays;
 public class activity_inventaire extends AppCompatActivity {
     private int qt = 0;
     private Button btplus;
@@ -23,14 +44,18 @@ public class activity_inventaire extends AppCompatActivity {
     private Button retour;
     private Button scanner;
     private activity_inventaire activity;
-
     private TextView Numero;
     private TextView Designation;
     private TextView CodeEan;
     private TextView QtStock;
+    private TextView DataScann;
+    private EMDKManager emdkManager;
+    private ScanAndPairManager scanAndPairManager;
+    TextView tv1 = null;
+    StringBuilder sb = new StringBuilder();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_inventaire);
@@ -39,6 +64,7 @@ public class activity_inventaire extends AppCompatActivity {
         this.Designation = findViewById(R.id.textViewDesignation);
         this.CodeEan = findViewById(R.id.textViewCodeEan);
         this.QtStock = findViewById(R.id.textViewQtStock);
+        this.DataScann = findViewById(R.id.datascan);
         this.scanner = findViewById(R.id.scan_button);
         this.activity = this;
         this.btajourinventaire = findViewById(R.id.btmetajourinventaire);
@@ -52,6 +78,16 @@ public class activity_inventaire extends AppCompatActivity {
         QtStock.setText("");
         final Activity activity = this;
 
+
+/**        VersionManager versionManager = (VersionManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.VERSION);
+
+        EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(),null);
+        if (results.statusCode == EMDKResults.STATUS_CODE.SUCCESS){
+            UpdateUI("Demande d'objet réussie");
+        } else {
+            UpdateUI("Erreur de demande d'objet");
+        }
+**/
         scanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +104,30 @@ public class activity_inventaire extends AppCompatActivity {
 
             }
         });
+        DataScann.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 12) {
+                    //DataScann.setText("0" + s);
+                    //DataScann.setText(s+"");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                    if (s.length() == 14){
+                      //  DataScann.setText("0"+s);
+                    }
+                    if (s.length() == 13){
+
+                    }
+            }
+        });
 
         btplus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +138,6 @@ public class activity_inventaire extends AppCompatActivity {
                 } else {
                     qt++;
                     viewqt.setText("" + qt);
-
                     DatabaseHelper db = new DatabaseHelper(activity);
                     Inventaire  inventaire = new Inventaire(0,"","","",1,0);
                     inventaire = db.getInventaire(CodeEan.getText().toString());
@@ -157,6 +215,18 @@ public class activity_inventaire extends AppCompatActivity {
             }
         });
     }
+    void UpdateUI(String message){
+        final String text = message;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                sb.insert(0,text+"\n------------------------------------------------\n");
+                tv1.setText(sb.toString());
+            }
+        });
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult =

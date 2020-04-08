@@ -6,17 +6,25 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.symbol.emdk.EMDKManager;
+import com.symbol.emdk.EMDKResults;
+import com.zebra.savanna.Models.BarcodeData;
+import com.zebra.savanna.Models.Errors.Error;
+import java.net.HttpRetryException;
+import org.json.JSONException;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -86,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
     private class GetArticle extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
@@ -153,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
 
         @Override
         protected void onPostExecute(Void aVoid) {

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "ch.orioninformatique.gstocktdm"
-        minSdkVersion 23
+        minSdkVersion 25
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -36,5 +36,14 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.13'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    //provided fileTree(includes: ['com.symbol.emdk.jar'],dir: '')
+    implementation files('libs/SavannaTools.jar')
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.android.support:appcompat-v7:29.0.3'
+
+    implementation 'com.android.support.constraint:constraint-layout:10.0.2'
+    compileOnly 'com.symbol:emdk:7.6+'
+
+
+
+
 }
