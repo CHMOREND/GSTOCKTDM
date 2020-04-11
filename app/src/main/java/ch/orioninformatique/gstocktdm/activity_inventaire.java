@@ -44,6 +44,9 @@ import ch.orioninformatique.gstocktdm.BarcodeScannerEngine;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class activity_inventaire extends AppCompatActivity {
     private int qt = 0;
@@ -65,8 +68,6 @@ public class activity_inventaire extends AppCompatActivity {
     private ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
     private Integer idStock;
-    TextView tv1 = null;
-    StringBuilder sb = new StringBuilder();
 
     @Override
     protected void onDestroy() {
@@ -214,17 +215,6 @@ public class activity_inventaire extends AppCompatActivity {
         });
     }
 
-    void UpdateUI(String message) {
-        final String text = message;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                sb.insert(0, text + "\n------------------------------------------------\n");
-                tv1.setText(sb.toString());
-            }
-        });
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -248,9 +238,11 @@ public class activity_inventaire extends AppCompatActivity {
                 inventaire1.setQt(1);
                 inventaire1.setQtstock(0);
                 inventaire1.setEan(scanContent);
-                inventaire1.setNumero(inventaire1.getNumero());
-                inventaire1.setDesignation(inventaire1.getDesignation());
+
+                inventaire1.setNumero(Numero.getText().toString());
+                inventaire1.setDesignation(Designation.getText().toString());
                 db.addInventaire(inventaire1);
+
                 viewqt.setText(Integer.toString(inventaire1.getQt()));
                 QtStock.setText(Integer.toString(inventaire1.getQtstock()));
                 CodeEan.setText(inventaire1.getEan());
@@ -307,7 +299,7 @@ public class activity_inventaire extends AppCompatActivity {
     // The section below assumes that a UI exists in which to place the data. A production
     // application would be driving much of the behavior following a scan.
     //
-    private void displayScanResult(Intent initiatingIntent, String howDataReceived) {
+    private void displayScanResult(Intent initiatingIntent, String howDataReceived) throws InterruptedException {
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
@@ -327,44 +319,71 @@ public class activity_inventaire extends AppCompatActivity {
         } else {
             url = "http://" + parametres.getAdresse() + ':' + parametres.getPort() + "/article?ean=" + decodedData;
         }
+        idStock = 0;
         new   activity_inventaire.GetArticle().execute();
+        Thread.sleep(100);
+        if (idStock == 0) {
+            // message pas trouvé l'article
+            AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
+            viewqt.setText("0");
+            QtStock.setText("");
+            mypopup.setTitle("Choisissez une réponse ?");
+            mypopup.setMessage("Je n'ai pas trouvé l'article dans le stock avec le code EAN suivant : "+decodedData+"voulez-vous lier ce code à un article");
+            mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(inventaireAcitivty);
+                    finish();
+                }
+            });
+            mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-        DatabaseHelper db = new DatabaseHelper(activity);
-        Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
-        inventaire = dbp.getInventaire(decodedData);
-        if (inventaire == null) {
-            // création de l'inventaire
-            Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
-            inventaire1.setQt(1);
-            inventaire1.setQtstock(0);
-            inventaire1.setEan(decodedData);
-            inventaire1.setNumero(inventaire1.getNumero());
-            inventaire1.setDesignation(inventaire1.getDesignation());
-            db.addInventaire(inventaire1);
-            viewqt.setText(Integer.toString(inventaire1.getQt()));
-            QtStock.setText(Integer.toString(inventaire1.getQtstock()));
-            CodeEan.setText(inventaire1.getEan());
-            Numero.setText(inventaire1.getNumero());
-            Designation.setText(inventaire1.getDesignation());
-
+                }
+            });
+            mypopup.show();
         } else {
-            qt = inventaire.getQt();
-            qt++;
-            inventaire.setQt(qt);
-            db.updateInventaire(inventaire);
-            viewqt.setText(Integer.toString(inventaire.getQt()));
-            QtStock.setText(Integer.toString(inventaire.getQtstock()));
-            CodeEan.setText(inventaire.getEan());
-            Numero.setText(inventaire.getNumero());
-            Designation.setText(inventaire.getDesignation());
-        }
-        if (inventaire != null) {
-            viewqt.setText(Integer.toString(inventaire.getQt()));
-            QtStock.setText(Integer.toString(inventaire.getQtstock()));
-            CodeEan.setText(inventaire.getEan());
-            Numero.setText(inventaire.getNumero());
-            Designation.setText(inventaire.getDesignation());
 
+            DatabaseHelper db = new DatabaseHelper(activity);
+            Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
+            inventaire = dbp.getInventaire(decodedData);
+            if (inventaire == null) {
+                // création de l'inventaire
+                Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
+                inventaire1.setQt(1);
+                inventaire1.setQtstock(0);
+                inventaire1.setEan(decodedData);
+                inventaire1.setNumero(Numero.getText().toString());
+                inventaire1.setDesignation(Designation.getText().toString());
+                db.addInventaire(inventaire1);
+
+                viewqt.setText(Integer.toString(inventaire1.getQt()));
+                QtStock.setText(Integer.toString(inventaire1.getQtstock()));
+                CodeEan.setText(inventaire1.getEan());
+                Numero.setText(inventaire1.getNumero());
+                Designation.setText(inventaire1.getDesignation());
+
+            } else {
+                qt = inventaire.getQt();
+                qt++;
+                inventaire.setQt(qt);
+                db.updateInventaire(inventaire);
+                viewqt.setText(Integer.toString(inventaire.getQt()));
+                QtStock.setText(Integer.toString(inventaire.getQtstock()));
+                CodeEan.setText(inventaire.getEan());
+                Numero.setText(inventaire.getNumero());
+                Designation.setText(inventaire.getDesignation());
+            }
+            if (inventaire != null) {
+                viewqt.setText(Integer.toString(inventaire.getQt()));
+                QtStock.setText(Integer.toString(inventaire.getQtstock()));
+                CodeEan.setText(inventaire.getEan());
+                Numero.setText(inventaire.getNumero());
+                Designation.setText(inventaire.getDesignation());
+
+            }
         }
     }
 
@@ -394,12 +413,12 @@ public class activity_inventaire extends AppCompatActivity {
                         Designation.setText("");
                         idStock = 0;
                     } else {
-
                         JSONObject jsonObjet = new JSONObject(jsonStr);
                         JSONArray article = jsonObjet.getJSONArray("article");
                         for (int i = 0; i < article.length(); i++) {
                             JSONObject a = article.getJSONObject(i);
                             String id = a.getString("id");
+                            idStock = a.getInt("id");
                             String numero = a.getString("numero");
                             String designation = a.getString("designation");
                             String ean = a.getString("ean");
