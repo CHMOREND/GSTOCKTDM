@@ -42,8 +42,7 @@ dependencies {
 
     implementation 'com.android.support.constraint:constraint-layout:10.0.2'
     compileOnly 'com.symbol:emdk:7.6+'
-
-
+    testImplementation 'junit:junit:4.13'
 
 
 }

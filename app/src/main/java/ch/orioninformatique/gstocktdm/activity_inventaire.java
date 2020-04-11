@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.VectorEnabledTintResources;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,9 +35,16 @@ import com.zebra.savanna.Symbology;
 import com.zebra.savanna.UPCLookup;
 import com.zebra.savanna.Models.Errors.Error;
 import com.zebra.savanna.SavannaAPI;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ch.orioninformatique.gstocktdm.BarcodeScannerEngine;
 
 import java.util.Arrays;
+import java.util.HashMap;
+
 public class activity_inventaire extends AppCompatActivity {
     private int qt = 0;
     private Button btplus;
@@ -49,10 +59,21 @@ public class activity_inventaire extends AppCompatActivity {
     private TextView CodeEan;
     private TextView QtStock;
     private TextView DataScann;
+    private String url;
     private EMDKManager emdkManager;
     private ScanAndPairManager scanAndPairManager;
+    private ProgressDialog pDialog;
+    private String TAG = MainActivity.class.getSimpleName();
+    private Integer idStock;
     TextView tv1 = null;
     StringBuilder sb = new StringBuilder();
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,7 +85,6 @@ public class activity_inventaire extends AppCompatActivity {
         this.Designation = findViewById(R.id.textViewDesignation);
         this.CodeEan = findViewById(R.id.textViewCodeEan);
         this.QtStock = findViewById(R.id.textViewQtStock);
-        this.DataScann = findViewById(R.id.datascan);
         this.scanner = findViewById(R.id.scan_button);
         this.activity = this;
         this.btajourinventaire = findViewById(R.id.btmetajourinventaire);
@@ -78,16 +98,12 @@ public class activity_inventaire extends AppCompatActivity {
         QtStock.setText("");
         final Activity activity = this;
 
+        IntentFilter filter = new IntentFilter();
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
+        registerReceiver(myBroadcastReceiver, filter);
 
-/**        VersionManager versionManager = (VersionManager) emdkManager.getInstance(EMDKManager.FEATURE_TYPE.VERSION);
 
-        EMDKResults results = EMDKManager.getEMDKManager(getApplicationContext(),null);
-        if (results.statusCode == EMDKResults.STATUS_CODE.SUCCESS){
-            UpdateUI("Demande d'objet réussie");
-        } else {
-            UpdateUI("Erreur de demande d'objet");
-        }
-**/
         scanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,42 +120,18 @@ public class activity_inventaire extends AppCompatActivity {
 
             }
         });
-        DataScann.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 12) {
-                    //DataScann.setText("0" + s);
-                    //DataScann.setText(s+"");
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                    if (s.length() == 14){
-                      //  DataScann.setText("0"+s);
-                    }
-                    if (s.length() == 13){
-
-                    }
-            }
-        });
 
         btplus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (CodeEan.getText().length() == 0) {
-                    Toast.makeText(getApplicationContext(),"Vous devez d'abord scanner un article !",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Vous devez d'abord scanner un article !", Toast.LENGTH_SHORT).show();
                 } else {
                     qt++;
                     viewqt.setText("" + qt);
                     DatabaseHelper db = new DatabaseHelper(activity);
-                    Inventaire  inventaire = new Inventaire(0,"","","",1,0);
+                    Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
                     inventaire = db.getInventaire(CodeEan.getText().toString());
                     inventaire.setQt(qt);
                     db.updateInventaire(inventaire);
@@ -151,8 +143,10 @@ public class activity_inventaire extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 qt--;
-                if (qt < 0) {qt = 0;}
-                viewqt.setText(""+qt);
+                if (qt < 0) {
+                    qt = 0;
+                }
+                viewqt.setText("" + qt);
                 if (CodeEan.getText().length() != 0) {
                     DatabaseHelper db = new DatabaseHelper(activity);
                     Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
@@ -169,9 +163,13 @@ public class activity_inventaire extends AppCompatActivity {
                 // enregsitre l'inventaire si il existe
                 DatabaseHelper db = new DatabaseHelper(activity);
                 Integer nbrInventaire = db.GetInventaireCount();
-                if (nbrInventaire > 0){
+                if (nbrInventaire > 0) {
                     qt = 0;
-                    viewqt.setText(""+qt);
+                    viewqt.setText("" + qt);
+                    // ici enregistre les inventaires dans pmeSoft
+
+                    // ici efface les inventaire
+                    db.deleteInventaire();
                     Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(inventaireAcitivty);
                     finish();
@@ -185,42 +183,43 @@ public class activity_inventaire extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper db = new DatabaseHelper(activity);
                 Integer nbrInventaire = db.GetInventaireCount();
-                if (nbrInventaire > 0){
+                if (nbrInventaire > 0) {
                     AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
                     mypopup.setTitle("Abandonner ?");
                     mypopup.setMessage("Vous n'avez pas enregistrer l'inventaire, voulez-vous vraiment sortir");
                     mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(inventaireAcitivty);
+                            finish();
+                        }
+                    });
+                    mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    mypopup.show();
+
+                } else {
                     Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(inventaireAcitivty);
                     finish();
-                    }
-                });
-                mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                mypopup.show();
-
-            } else {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(inventaireAcitivty);
-                finish();
 
 
-            }
+                }
             }
         });
     }
-    void UpdateUI(String message){
+
+    void UpdateUI(String message) {
         final String text = message;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                sb.insert(0,text+"\n------------------------------------------------\n");
+                sb.insert(0, text + "\n------------------------------------------------\n");
                 tv1.setText(sb.toString());
             }
         });
@@ -236,37 +235,36 @@ public class activity_inventaire extends AppCompatActivity {
             String scanFormat = scanningResult.getFormatName();
             if (scanContent.length() == 12) {
                 // ajout d'un 0 si le code est inférieure à 13 caractères
-                scanContent = "0"+scanningResult.getContents();
-            }
-            else {
+                scanContent = "0" + scanningResult.getContents();
+            } else {
                 scanContent = scanningResult.getContents();
             }
             DatabaseHelper db = new DatabaseHelper(activity);
-            Inventaire  inventaire = new Inventaire(0,"","","",1,0);
+            Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
             inventaire = db.getInventaire(scanContent);
-            if (inventaire == null){
+            if (inventaire == null) {
                 // création de l'inventaire
-                Inventaire inventaire1 = new Inventaire("","","",1,0);
+                Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
                 inventaire1.setQt(1);
                 inventaire1.setQtstock(0);
                 inventaire1.setEan(scanContent);
                 inventaire1.setNumero(inventaire1.getNumero());
                 inventaire1.setDesignation(inventaire1.getDesignation());
                 db.addInventaire(inventaire1);
-                viewqt.setText( Integer.toString(inventaire1.getQt()));
+                viewqt.setText(Integer.toString(inventaire1.getQt()));
                 QtStock.setText(Integer.toString(inventaire1.getQtstock()));
                 CodeEan.setText(inventaire1.getEan());
                 Numero.setText(inventaire1.getNumero());
                 Designation.setText(inventaire1.getDesignation());
 
             } else {
-                qt =  inventaire.getQt();
+                qt = inventaire.getQt();
                 qt++;
                 inventaire.setQt(qt);
                 db.updateInventaire(inventaire);
             }
             if (inventaire != null) {
-                viewqt.setText( Integer.toString(inventaire.getQt()));
+                viewqt.setText(Integer.toString(inventaire.getQt()));
                 QtStock.setText(Integer.toString(inventaire.getQtstock()));
                 CodeEan.setText(inventaire.getEan());
                 Numero.setText(inventaire.getNumero());
@@ -277,11 +275,178 @@ public class activity_inventaire extends AppCompatActivity {
 
         } else {
             Toast.makeText(getApplicationContext(),
-                "Aucunne données de scan reçu !", Toast.LENGTH_SHORT).show();
+                    "Aucunne données de scan reçu !", Toast.LENGTH_SHORT).show();
 
         }
     }
 
+    private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Bundle b = intent.getExtras();
+
+            //  This is useful for debugging to verify the format of received intents from DataWedge
+            //for (String key : b.keySet())
+            //{
+            //    Log.v(LOG_TAG, key);
+            //}
+
+            if (action.equals(getResources().getString(R.string.activity_intent_filter_action))) {
+                //  Received a barcode scan
+                try {
+                    displayScanResult(intent, "via Broadcast");
+                } catch (Exception e) {
+                    //  Catch if the UI does not exist when we receive the broadcast
+                }
+            }
+        }
+    };
+
+    //
+    // The section below assumes that a UI exists in which to place the data. A production
+    // application would be driving much of the behavior following a scan.
+    //
+    private void displayScanResult(Intent initiatingIntent, String howDataReceived) {
+        String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
+        String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+        String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+        if (decodedData.length() == 12) {
+            decodedData = "0" + decodedData;
+        }
+        CodeEan.setText(decodedData);
+        // recherche du code EAN13 dans pmeSof
+        DatabaseHelper dbp = new DatabaseHelper(this);
+
+        Parametres parametres = new Parametres(0, "", 0);
+        parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
+        if (parametres == null) {
+            Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+            startActivity(parametreAcitivty);
+            finish();
+        } else {
+            url = "http://" + parametres.getAdresse() + ':' + parametres.getPort() + "/article?ean=" + decodedData;
+        }
+        new   activity_inventaire.GetArticle().execute();
+
+        DatabaseHelper db = new DatabaseHelper(activity);
+        Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
+        inventaire = dbp.getInventaire(decodedData);
+        if (inventaire == null) {
+            // création de l'inventaire
+            Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
+            inventaire1.setQt(1);
+            inventaire1.setQtstock(0);
+            inventaire1.setEan(decodedData);
+            inventaire1.setNumero(inventaire1.getNumero());
+            inventaire1.setDesignation(inventaire1.getDesignation());
+            db.addInventaire(inventaire1);
+            viewqt.setText(Integer.toString(inventaire1.getQt()));
+            QtStock.setText(Integer.toString(inventaire1.getQtstock()));
+            CodeEan.setText(inventaire1.getEan());
+            Numero.setText(inventaire1.getNumero());
+            Designation.setText(inventaire1.getDesignation());
+
+        } else {
+            qt = inventaire.getQt();
+            qt++;
+            inventaire.setQt(qt);
+            db.updateInventaire(inventaire);
+            viewqt.setText(Integer.toString(inventaire.getQt()));
+            QtStock.setText(Integer.toString(inventaire.getQtstock()));
+            CodeEan.setText(inventaire.getEan());
+            Numero.setText(inventaire.getNumero());
+            Designation.setText(inventaire.getDesignation());
+        }
+        if (inventaire != null) {
+            viewqt.setText(Integer.toString(inventaire.getQt()));
+            QtStock.setText(Integer.toString(inventaire.getQtstock()));
+            CodeEan.setText(inventaire.getEan());
+            Numero.setText(inventaire.getNumero());
+            Designation.setText(inventaire.getDesignation());
+
+        }
+    }
+
+    private class GetArticle extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // show loading dialog
+            pDialog = new ProgressDialog(activity_inventaire.this);
+            pDialog.setMessage("Lecture ...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... Voids) {
+            HttpHandler sh = new HttpHandler();
+            String jsonStr = sh.makeServiceCall(url);
+            Log.e(TAG, "Réponse de url : " + jsonStr);
+            if (jsonStr != null) {
+                try {
+                    if (jsonStr.contains("false")) {
+                        // le code ean n'a pas été retrouvé
+                        QtStock.setText("0");
+                        CodeEan.setText("");
+                        Numero.setText("");
+                        Designation.setText("");
+                        idStock = 0;
+                    } else {
+
+                        JSONObject jsonObjet = new JSONObject(jsonStr);
+                        JSONArray article = jsonObjet.getJSONArray("article");
+                        for (int i = 0; i < article.length(); i++) {
+                            JSONObject a = article.getJSONObject(i);
+                            String id = a.getString("id");
+                            String numero = a.getString("numero");
+                            String designation = a.getString("designation");
+                            String ean = a.getString("ean");
+                            String qtstock = a.getString("qtstock");
+                            idStock = a.getInt("id");
+                            QtStock.setText(qtstock);
+                            CodeEan.setText(ean);
+                            Numero.setText(numero);
+                            Designation.setText(designation);
+                        }
+
+                    }
+                } catch (final JSONException e) {
+                    Log.e(TAG, "JSON erreur paramètres : " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(activity_inventaire.this, "JSON erreur paramètres : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } else {
+                Log.e(TAG, " pas de réponse du serveur : ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity_inventaire.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
+                        Intent paramAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+                        startActivity(paramAcitivty);
+                        finish();
+                    }
+                });
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            // mise à jour de json
+            //ListAdapter adapter
+        }
+    }
 
 
 };

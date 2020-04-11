@@ -9,4 +9,8 @@
     <string name="retour">Retour</string>
     <string name="mettreajour">Mettre à jour l\'inventaire</string>
     <string name="ParamSauve">Sauvegarde</string>
+    <string name="activity_intent_filter_action">ch.orioninformatique.gstocktdm.ACTION</string>
+    <string name="datawedge_intent_key_data">com.symbol.datawedge.data_string</string>
+    <string name="datawedge_intent_key_source">com.symbol.datawedge.source</string>
+    <string name="datawedge_intent_key_label_type">com.symbol.datawedge.label_type</string>
 </resources>
