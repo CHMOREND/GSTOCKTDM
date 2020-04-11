@@ -44,6 +44,7 @@ import ch.orioninformatique.gstocktdm.BarcodeScannerEngine;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.*;
@@ -164,10 +165,37 @@ public class activity_inventaire extends AppCompatActivity {
                 // enregsitre l'inventaire si il existe
                 DatabaseHelper db = new DatabaseHelper(activity);
                 Integer nbrInventaire = db.GetInventaireCount();
+                String url2 = "";
                 if (nbrInventaire > 0) {
                     qt = 0;
                     viewqt.setText("" + qt);
+                    DatabaseHelper dbp = new DatabaseHelper(activity);
+
+                    Parametres parametres = new Parametres(0, "", 0);
+                    parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
+                    if (parametres == null) {
+                        Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+                        startActivity(parametreAcitivty);
+                        finish();
+                    } else {
+                        url2 = "http://" + parametres.getAdresse() + ':' + parametres.getPort();
+                    }
+
                     // ici enregistre les inventaires dans pmeSoft
+                    List<Inventaire> inventaires = db.getAllInventaire();
+                    for (int i=0;i < inventaires.size();i++){
+                        String ean = inventaires.get(i).ean;
+                        Integer qt = inventaires.get(i).qt;
+                        url = url2+"/savearticle?id=" + ean +"&qt=" + qt.toString();
+                        new   activity_inventaire.SauveInventaire().execute();
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
 
                     // ici efface les inventaire
                     db.deleteInventaire();
@@ -321,14 +349,14 @@ public class activity_inventaire extends AppCompatActivity {
         }
         idStock = 0;
         new   activity_inventaire.GetArticle().execute();
-        Thread.sleep(100);
+        Thread.sleep(200);
         if (idStock == 0) {
             // message pas trouvé l'article
             AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
             viewqt.setText("0");
             QtStock.setText("");
             mypopup.setTitle("Choisissez une réponse ?");
-            mypopup.setMessage("Je n'ai pas trouvé l'article dans le stock avec le code EAN suivant : "+decodedData+"voulez-vous lier ce code à un article");
+            mypopup.setMessage("Je n'ai pas trouvé l'article dans le stock avec le code EAN suivant : "+decodedData+" voulez-vous lier ce code à un article");
             mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -353,7 +381,7 @@ public class activity_inventaire extends AppCompatActivity {
                 // création de l'inventaire
                 Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
                 inventaire1.setQt(1);
-                inventaire1.setQtstock(0);
+                inventaire1.setQtstock(Integer.parseInt(QtStock.getText().toString()));
                 inventaire1.setEan(decodedData);
                 inventaire1.setNumero(Numero.getText().toString());
                 inventaire1.setDesignation(Designation.getText().toString());
@@ -467,5 +495,50 @@ public class activity_inventaire extends AppCompatActivity {
         }
     }
 
+    private class SauveInventaire extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // show loading dialog
+            pDialog = new ProgressDialog(activity_inventaire.this);
+            pDialog.setMessage("Lecture ...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... Voids) {
+            HttpHandler sh = new HttpHandler();
+            String jsonStr = sh.makeServiceCall(url);
+            Log.e(TAG, "Réponse de url : " + jsonStr);
+            if (jsonStr != null) {
+
+
+            } else {
+                Log.e(TAG, " pas de réponse du serveur : ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity_inventaire.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
+                        Intent paramAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+                        startActivity(paramAcitivty);
+                        finish();
+                    }
+                });
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            // mise à jour de json
+            //ListAdapter adapter
+        }
+    }
 
 };

@@ -132,6 +132,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
                 inventaire.setDesignation(cursor.getString(3));
                 inventaire.setQt(cursor.getInt(4));
                 inventaire.setQtstock(cursor.getInt(5));
+                inventaireList.add(inventaire);
             } while (cursor.moveToNext());
         }
         return inventaireList;
