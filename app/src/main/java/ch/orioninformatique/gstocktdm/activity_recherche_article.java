@@ -1,110 +1,82 @@
+/*
+ * Copyright (c) 2020. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package ch.orioninformatique.gstocktdm;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.symbol.emdk.EMDKManager;
-import com.symbol.emdk.EMDKResults;
-import com.zebra.savanna.Models.BarcodeData;
-import com.zebra.savanna.Models.Errors.Error;
-import java.net.HttpRetryException;
-import org.json.JSONException;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
-
-    private Button  btinventaire;
-    private Button  btsortiemarchandise;
-    private Button  btentreemarchandise;
-    public  String url;
-    private ListView lv;
+public class activity_recherche_article extends AppCompatActivity {
+    private Button retour;
+    private String url;
+    private Activity activity = this;
     private  ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
+    private ListView lv;
+    ArrayList<HashMap<String, String>> articleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_main);
-
-        this.btinventaire = (Button) findViewById(R.id.BtInventaire);
-        this.btentreemarchandise = (Button) findViewById(R.id.BtEntreeMarchandise);
-        this.btsortiemarchandise = (Button) findViewById(R.id.BtSoriteMarchandise);
-
-        DatabaseHelper db = new DatabaseHelper(this);
-
+        setContentView(R.layout.activity_recherche_article);
+        DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
-        parametres = db.getParametre(1);  // lecture des paramètres
-        if (parametres == null){
+        articleList = new ArrayList<>();
+        lv = (ListView) findViewById(R.id.listView);
 
-            Intent parametreAcitivty = new Intent(getApplicationContext(),activity_Parametre.class);
+        parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
+        if (parametres == null) {
+            Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
             startActivity(parametreAcitivty);
             finish();
-        } else
-        {
-            url = "http://"+parametres.getAdresse()+':'+ parametres.getPort()+'/';
-
-//          url = "http://192.168.10.58:8081/article?ean=8058333424644";
-  //        url = "http://192.168.10.58:8081/articles";
-
-           //url = "https://api.androidhive.info/contacts/";
-            // ici contrôle de la connexion avec le serveur REST
-            new GetArticle().execute();
-
+        } else {
+            url = "http://" + parametres.getAdresse() + ':' + parametres.getPort()+"/articles";
+            new GetArticles().execute();
 
         }
 
-        btinventaire.setOnClickListener(new View.OnClickListener() {
+
+        this.retour = findViewById(R.id.btrechercharticle);
+        retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent inventaireAcitivty = new Intent(getApplicationContext(),activity_inventaire.class);
                 startActivity(inventaireAcitivty);
                 finish();
-            }
-        });
-        btentreemarchandise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(),activityEntreeMarchandise.class);
-                startActivity(inventaireAcitivty);
-                finish();
-            }
-        });
-        btsortiemarchandise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(),activity_sortie_marchandise.class);
-                startActivity(inventaireAcitivty);
-                finish();
+
             }
         });
     }
-
-
-    private class GetArticle extends AsyncTask<Void,Void,Void> {
+    private class GetArticles extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // show loading dialog
-            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog = new ProgressDialog(activity_recherche_article.this);
             pDialog.setMessage("Lecture ...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -135,10 +107,9 @@ public class MainActivity extends AppCompatActivity {
                             artic.put("id",id);
                             artic.put("numero",numero);
                             artic.put("designation",designation);
-                            artic.put("ean",ean);
-                            artic.put("qtstock",qtstock);
 
-                            // articleList.add(artic);
+                            articleList.add(artic);
+
 
                         }
 
@@ -148,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(MainActivity.this, "JSON erreur paramètres : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "JSON erreur paramètres : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -157,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
                         Intent paramAcitivty = new Intent(getApplicationContext(),activity_Parametre.class);
                         startActivity(paramAcitivty);
                         finish();
@@ -175,7 +146,13 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.dismiss();
             }
             // mise à jour de json
-            //ListAdapter adapter
+            ListAdapter adapter = new SimpleAdapter(
+                    activity_recherche_article.this,articleList,
+                    R.layout.list_item_article,new String[]{"id","numero","designation"},
+                    new int[]{R.id.id,R.id.numero,R.id.designation} );
+            lv.setAdapter(adapter);
+
+
         }
     }
 }

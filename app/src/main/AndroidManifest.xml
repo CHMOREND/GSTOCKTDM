@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.orioninformatique.gstocktdm">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
 
     <application
-        android:targetSandboxVersion="1"
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_tdm"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_tdm_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <uses-library android:name="com.symbol.emdk"/>
-        <activity android:name="ch.orioninformatique.gstocktdm.activity_Parametre"></activity>
-        <activity android:name="ch.orioninformatique.gstocktdm.activity_sortie_marchandise" />
-        <activity android:name="ch.orioninformatique.gstocktdm.activityEntreeMarchandise" />
-        <activity android:name="ch.orioninformatique.gstocktdm.activity_inventaire" />
+        android:targetSandboxVersion="1"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity_recherche_article"></activity>
+        <activity android:name=".activity_Parametre" />
+        <activity android:name=".activity_sortie_marchandise" />
+        <activity android:name=".activityEntreeMarchandise" />
+        <activity android:name=".activity_inventaire" />
         <activity
-            android:name="ch.orioninformatique.gstocktdm.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +26,11 @@
             </intent-filter>
         </activity>
 
+        <uses-library android:name="com.symbol.emdk" />
     </application>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

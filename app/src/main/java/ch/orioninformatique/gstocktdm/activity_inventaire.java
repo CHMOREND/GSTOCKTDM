@@ -69,6 +69,7 @@ public class activity_inventaire extends AppCompatActivity {
     private ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
     private Integer idStock;
+    private Boolean allerRechercheStock = false;
 
     @Override
     protected void onDestroy() {
@@ -130,6 +131,7 @@ public class activity_inventaire extends AppCompatActivity {
                 if (CodeEan.getText().length() == 0) {
                     Toast.makeText(getApplicationContext(), "Vous devez d'abord scanner un article !", Toast.LENGTH_SHORT).show();
                 } else {
+                    qt =  Integer.parseInt( viewqt.getText().toString());
                     qt++;
                     viewqt.setText("" + qt);
                     DatabaseHelper db = new DatabaseHelper(activity);
@@ -144,6 +146,7 @@ public class activity_inventaire extends AppCompatActivity {
         btmoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                qt =  Integer.parseInt( viewqt.getText().toString());
                 qt--;
                 if (qt < 0) {
                     qt = 0;
@@ -169,8 +172,8 @@ public class activity_inventaire extends AppCompatActivity {
                 if (nbrInventaire > 0) {
                     qt = 0;
                     viewqt.setText("" + qt);
-                    DatabaseHelper dbp = new DatabaseHelper(activity);
 
+                    DatabaseHelper dbp = new DatabaseHelper(activity);
                     Parametres parametres = new Parametres(0, "", 0);
                     parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
                     if (parametres == null) {
@@ -183,28 +186,24 @@ public class activity_inventaire extends AppCompatActivity {
 
                     // ici enregistre les inventaires dans pmeSoft
                     List<Inventaire> inventaires = db.getAllInventaire();
+
                     for (int i=0;i < inventaires.size();i++){
                         String ean = inventaires.get(i).ean;
                         Integer qt = inventaires.get(i).qt;
                         url = url2+"/savearticle?id=" + ean +"&qt=" + qt.toString();
                         new   activity_inventaire.SauveInventaire().execute();
                         try {
-                            Thread.sleep(200);
+                            Thread.sleep(250);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-
-
                     }
-
                     // ici efface les inventaire
                     db.deleteInventaire();
                     Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(inventaireAcitivty);
                     finish();
                 }
-
-
             }
         });
         retour.setOnClickListener(new View.OnClickListener() {
@@ -263,6 +262,7 @@ public class activity_inventaire extends AppCompatActivity {
             if (inventaire == null) {
                 // création de l'inventaire
                 Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
+                qt = 1;
                 inventaire1.setQt(1);
                 inventaire1.setQtstock(0);
                 inventaire1.setEan(scanContent);
@@ -349,7 +349,7 @@ public class activity_inventaire extends AppCompatActivity {
         }
         idStock = 0;
         new   activity_inventaire.GetArticle().execute();
-        Thread.sleep(200);
+        Thread.sleep(250);
         if (idStock == 0) {
             // message pas trouvé l'article
             AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
@@ -360,8 +360,8 @@ public class activity_inventaire extends AppCompatActivity {
             mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(inventaireAcitivty);
+                    Intent rechercheArticleAcitivty = new Intent(getApplicationContext(), activity_recherche_article.class);
+                    startActivity(rechercheArticleAcitivty);
                     finish();
                 }
             });
@@ -372,6 +372,7 @@ public class activity_inventaire extends AppCompatActivity {
                 }
             });
             mypopup.show();
+
         } else {
 
             DatabaseHelper db = new DatabaseHelper(activity);
@@ -492,7 +493,7 @@ public class activity_inventaire extends AppCompatActivity {
             }
             // mise à jour de json
             //ListAdapter adapter
-        }
+            }
     }
 
     private class SauveInventaire extends AsyncTask<Void, Void, Void> {
@@ -501,7 +502,7 @@ public class activity_inventaire extends AppCompatActivity {
             super.onPreExecute();
             // show loading dialog
             pDialog = new ProgressDialog(activity_inventaire.this);
-            pDialog.setMessage("Lecture ...");
+            pDialog.setMessage("Enregistre ...");
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -537,6 +538,7 @@ public class activity_inventaire extends AppCompatActivity {
                 pDialog.dismiss();
             }
             // mise à jour de json
+
             //ListAdapter adapter
         }
     }

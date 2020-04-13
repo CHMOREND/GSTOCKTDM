@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="10dp"
+        android:text="TextView"/>
+
+        <TextView
+            android:id="@+id/numero"
+            android:layout_width="match_parent"
+            android:textColor="@color/design_default_color_primary"
+            android:textStyle="bold"
+            android:layout_marginTop="1dp"
+            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/designation"
+            android:layout_width="match_parent"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/design_default_color_primary"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+</LinearLayout>
+
+

@@ -6,8 +6,8 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:screenOrientation="userPortrait"
     android:paddingTop="?attr/actionBarSize"
+    android:screenOrientation="userPortrait"
     tools:visibility="visible">
 
     <Button
@@ -70,11 +70,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.0" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="357dp"
-        android:layout_height="52dp"
-        tools:layout_editor_absoluteX="2dp"
-        tools:layout_editor_absoluteY="512dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
