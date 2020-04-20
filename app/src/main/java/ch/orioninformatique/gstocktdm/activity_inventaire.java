@@ -60,7 +60,7 @@ public class activity_inventaire extends AppCompatActivity {
     private activity_inventaire activity;
     private TextView Numero;
     private TextView Designation;
-    private TextView CodeEan;
+    public TextView CodeEan;
     private TextView QtStock;
     private TextView DataScann;
     private String url;
@@ -68,6 +68,7 @@ public class activity_inventaire extends AppCompatActivity {
     private ScanAndPairManager scanAndPairManager;
     private ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
+    private String eanCode = "";
     private Integer idStock;
     private Boolean allerRechercheStock = false;
 
@@ -357,10 +358,12 @@ public class activity_inventaire extends AppCompatActivity {
             QtStock.setText("");
             mypopup.setTitle("Choisissez une réponse ?");
             mypopup.setMessage("Je n'ai pas trouvé l'article dans le stock avec le code EAN suivant : "+decodedData+" voulez-vous lier ce code à un article");
+            eanCode = decodedData;
             mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent rechercheArticleAcitivty = new Intent(getApplicationContext(), activity_recherche_article.class);
+                    rechercheArticleAcitivty.putExtra("codeEan",eanCode);
                     startActivity(rechercheArticleAcitivty);
                     finish();
                 }

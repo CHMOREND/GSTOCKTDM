@@ -8,6 +8,19 @@
     tools:context=".activity_recherche_article">
 
 
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
+    <SearchView
+        android:layout_width="299dp"
+        android:layout_height="42dp"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="7dp" />
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="322dp"
@@ -34,11 +47,12 @@
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="319dp"
-        android:layout_height="439dp"
+        android:layout_width="305dp"
+        android:layout_height="358dp"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottomAppBar">
 
 
     </ListView>
