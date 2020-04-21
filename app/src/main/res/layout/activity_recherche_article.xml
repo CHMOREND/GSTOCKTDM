@@ -8,21 +8,13 @@
     tools:context=".activity_recherche_article">
 
 
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="299dp"
-        android:layout_height="42dp"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="7dp"
-        tools:layout_editor_absoluteY="7dp" />
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="322dp"
         android:layout_height="52dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
 
         <Button
             android:id="@+id/btrechercharticle"
@@ -54,6 +46,17 @@
 
 
     </ListView>
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="318dp"
+        android:layout_height="42dp"
+        android:queryHint="Recherche une article"
+        android:iconifiedByDefault="false"
+        android:background="@color/colorPrimary"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="7dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
