@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ch.orioninformatique.gstocktdm">
 
     <application
@@ -10,8 +11,9 @@
         android:supportsRtl="true"
         android:targetSandboxVersion="1"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".activity_recherche_article"></activity>
+        android:usesCleartextTraffic="true"
+        tools:targetApi="o">
+        <activity android:name=".activity_recherche_article" />
         <activity android:name=".activity_Parametre" />
         <activity android:name=".activity_sortie_marchandise" />
         <activity android:name=".activityEntreeMarchandise" />
@@ -28,7 +30,8 @@
 
         <uses-library android:name="com.symbol.emdk" />
     </application>
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"
+        tools:ignore="ManifestOrder" />
     <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
 
     <uses-permission android:name="android.permission.INTERNET" />

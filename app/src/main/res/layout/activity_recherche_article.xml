@@ -8,16 +8,11 @@
     tools:context=".activity_recherche_article">
 
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
-
     <SearchView
+        android:id="@+id/searchView"
         android:layout_width="299dp"
         android:layout_height="42dp"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="7dp"
         tools:layout_editor_absoluteY="7dp" />
 
@@ -26,7 +21,8 @@
         android:layout_width="322dp"
         android:layout_height="52dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:ignore="MissingConstraints">
 
         <Button
             android:id="@+id/btrechercharticle"
@@ -51,8 +47,10 @@
         android:layout_height="358dp"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottomAppBar">
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintVertical_bias="0.54">
 
 
     </ListView>

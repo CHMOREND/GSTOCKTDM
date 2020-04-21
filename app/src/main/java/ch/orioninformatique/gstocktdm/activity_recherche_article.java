@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class activity_recherche_article extends AppCompatActivity {
+
     private Button retour;
     private String url;
     private Activity activity = this;
@@ -49,13 +51,17 @@ public class activity_recherche_article extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_recherche_article);
+
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("codeEan")) {
                 codeEan = intent.getStringExtra("codeEan");
             }
         }
-        setContentView(R.layout.activity_recherche_article);
+        this.retour = findViewById(R.id.btrechercharticle);
+
         DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
         articleList = new ArrayList<>();
@@ -73,7 +79,6 @@ public class activity_recherche_article extends AppCompatActivity {
         }
 
 
-        this.retour = findViewById(R.id.btrechercharticle);
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +88,7 @@ public class activity_recherche_article extends AppCompatActivity {
 
             }
         });
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
