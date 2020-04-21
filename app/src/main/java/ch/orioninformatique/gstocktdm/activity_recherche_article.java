@@ -97,7 +97,6 @@ public class activity_recherche_article extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if lv.cont
                 return false;
             }
 
