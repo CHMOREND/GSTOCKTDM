@@ -22,9 +22,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class activity_recherche_article extends AppCompatActivity {
 
@@ -47,13 +50,15 @@ public class activity_recherche_article extends AppCompatActivity {
     private ListView lv;
     private String codeEan = "";
     ArrayList<HashMap<String, String>> articleList;
+    private SearchView searchView;
+    ArrayAdapter<HashMap<String,String>> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_recherche_article);
-
+        searchView = (SearchView) findViewById(R.id.searchView);
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("codeEan")) {
@@ -77,7 +82,8 @@ public class activity_recherche_article extends AppCompatActivity {
             new GetArticles().execute();
 
         }
-
+//        adapter = new ArrayAdapter<HashMap<String, String>>(activity,android.R.layout.simple_list_item_1, (List<HashMap<String, String>>) lv);
+        lv.setAdapter(adapter);
 
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +94,18 @@ public class activity_recherche_article extends AppCompatActivity {
 
             }
         });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if lv.cont
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
