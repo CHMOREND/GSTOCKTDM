@@ -13,6 +13,19 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="o">
+        <activity
+            android:name=".activitycommandeclientListActivity"
+            android:label="@string/title_activitycommandeclient_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activitycommandeclientDetailActivity"
+            android:label="@string/title_activitycommandeclient_detail"
+            android:parentActivityName=".activitycommandeclientListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ch.orioninformatique.gstocktdm.activitycommandeclientListActivity" />
+        </activity>
         <activity android:name=".activity_recherche_article" />
         <activity android:name=".activity_Parametre" />
         <activity android:name=".activity_sortie_marchandise" />
@@ -30,10 +43,11 @@
 
         <uses-library android:name="com.symbol.emdk" />
     </application>
-    <uses-permission android:name="android.permission.CAMERA"
-        tools:ignore="ManifestOrder" />
     <uses-permission android:name="com.symbol.emdk.permission.EMDK" />
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:ignore="ManifestOrder" />
 
 </manifest>
