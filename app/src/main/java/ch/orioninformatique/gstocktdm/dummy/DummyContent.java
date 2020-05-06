@@ -31,7 +31,7 @@ public class DummyContent {
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 25;
+    private static final int COUNT = 250;
 
     static {
         // Add some sample items.
@@ -42,7 +42,7 @@ public class DummyContent {
 
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.numeroClient, item);
     }
 
     private static DummyItem createDummyItem(int position) {
@@ -62,19 +62,19 @@ public class DummyContent {
      * A dummy item representing a piece of content.
      */
     public static class DummyItem {
-        public final String id;
-        public final String content;
+        public final String numeroClient;
+        public final String nomclient;
         public final String details;
 
-        public DummyItem(String id, String content, String details) {
-            this.id = id;
-            this.content = content;
+        public DummyItem(String numeroClient, String nomclient, String details) {
+            this.numeroClient = numeroClient;
+            this.nomclient = nomclient;
             this.details = details;
         }
 
         @Override
         public String toString() {
-            return content;
+            return nomclient;
         }
     }
 }
