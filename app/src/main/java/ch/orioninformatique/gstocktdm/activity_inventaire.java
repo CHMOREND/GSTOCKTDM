@@ -71,7 +71,7 @@ public class activity_inventaire extends AppCompatActivity {
     private String eanCode = "";
     private Integer idStock;
     private Boolean allerRechercheStock = false;
-
+    private String decodedData;
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -248,7 +248,8 @@ public class activity_inventaire extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult =
                 IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (scanningResult != null) {
+
+            if (scanningResult != null) {
             String scanContent = scanningResult.getContents();
             String scanFormat = scanningResult.getFormatName();
             if (scanContent.length() == 12) {
@@ -330,7 +331,7 @@ public class activity_inventaire extends AppCompatActivity {
     //
     private void displayScanResult(Intent initiatingIntent, String howDataReceived) throws InterruptedException {
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
-        String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+        decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
         if (decodedData.length() == 12) {
             decodedData = "0" + decodedData;
@@ -348,75 +349,8 @@ public class activity_inventaire extends AppCompatActivity {
         } else {
             url = "http://" + parametres.getAdresse() + ':' + parametres.getPort() + "/article?ean=" + decodedData;
         }
-        idStock = 0;
+
         new   activity_inventaire.GetArticle().execute();
-        Thread.sleep(250);
-        if (idStock == 0) {
-            // message pas trouvé l'article
-            AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
-            viewqt.setText("0");
-            QtStock.setText("");
-            mypopup.setTitle("Choisissez une réponse ?");
-            mypopup.setMessage("Je n'ai pas trouvé l'article dans le stock avec le code EAN suivant : "+decodedData+" voulez-vous lier ce code à un article");
-            eanCode = decodedData;
-            mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent rechercheArticleAcitivty = new Intent(getApplicationContext(), activity_recherche_article.class);
-                    rechercheArticleAcitivty.putExtra("codeEan",eanCode);
-                    startActivity(rechercheArticleAcitivty);
-                    finish();
-                }
-            });
-            mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-            mypopup.show();
-
-        } else {
-
-            DatabaseHelper db = new DatabaseHelper(activity);
-            Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
-            inventaire = dbp.getInventaire(decodedData);
-            if (inventaire == null) {
-                // création de l'inventaire
-                Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
-                inventaire1.setQt(1);
-                inventaire1.setQtstock(Integer.parseInt(QtStock.getText().toString()));
-                inventaire1.setEan(decodedData);
-                inventaire1.setNumero(Numero.getText().toString());
-                inventaire1.setDesignation(Designation.getText().toString());
-                db.addInventaire(inventaire1);
-
-                viewqt.setText(Integer.toString(inventaire1.getQt()));
-                QtStock.setText(Integer.toString(inventaire1.getQtstock()));
-                CodeEan.setText(inventaire1.getEan());
-                Numero.setText(inventaire1.getNumero());
-                Designation.setText(inventaire1.getDesignation());
-
-            } else {
-                qt = inventaire.getQt();
-                qt++;
-                inventaire.setQt(qt);
-                db.updateInventaire(inventaire);
-                viewqt.setText(Integer.toString(inventaire.getQt()));
-                QtStock.setText(Integer.toString(inventaire.getQtstock()));
-                CodeEan.setText(inventaire.getEan());
-                Numero.setText(inventaire.getNumero());
-                Designation.setText(inventaire.getDesignation());
-            }
-            if (inventaire != null) {
-                viewqt.setText(Integer.toString(inventaire.getQt()));
-                QtStock.setText(Integer.toString(inventaire.getQtstock()));
-                CodeEan.setText(inventaire.getEan());
-                Numero.setText(inventaire.getNumero());
-                Designation.setText(inventaire.getDesignation());
-
-            }
-        }
     }
 
     private class GetArticle extends AsyncTask<Void, Void, Void> {
@@ -494,9 +428,77 @@ public class activity_inventaire extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
+
             // mise à jour de json
             //ListAdapter adapter
+            if (idStock == 0) {
+                // message pas trouvé l'article
+                AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
+                viewqt.setText("0");
+                QtStock.setText("");
+                mypopup.setTitle("Choisissez une réponse ?");
+                mypopup.setMessage("Je n'ai pas trouvé l'article dans le stock avec le code EAN suivant : "+decodedData+" voulez-vous lier ce code à un article");
+                eanCode = decodedData;
+                mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent rechercheArticleAcitivty = new Intent(getApplicationContext(), activity_recherche_article.class);
+                        rechercheArticleAcitivty.putExtra("codeEan",eanCode);
+                        startActivity(rechercheArticleAcitivty);
+                        finish();
+                    }
+                });
+                mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                mypopup.show();
+
+            } else
+            {
+
+                DatabaseHelper db = new DatabaseHelper(activity);
+                Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
+                inventaire = db.getInventaire(decodedData);
+                if (inventaire == null) {
+                    // création de l'inventaire
+                    Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
+                    inventaire1.setQt(1);
+                    inventaire1.setQtstock(Integer.parseInt(QtStock.getText().toString()));
+                    inventaire1.setEan(decodedData);
+                    inventaire1.setNumero(Numero.getText().toString());
+                    inventaire1.setDesignation(Designation.getText().toString());
+                    db.addInventaire(inventaire1);
+
+                    viewqt.setText(Integer.toString(inventaire1.getQt()));
+                    QtStock.setText(Integer.toString(inventaire1.getQtstock()));
+                    CodeEan.setText(inventaire1.getEan());
+                    Numero.setText(inventaire1.getNumero());
+                    Designation.setText(inventaire1.getDesignation());
+
+                } else {
+                    qt = inventaire.getQt();
+                    qt++;
+                    inventaire.setQt(qt);
+                    db.updateInventaire(inventaire);
+                    viewqt.setText(Integer.toString(inventaire.getQt()));
+                    QtStock.setText(Integer.toString(inventaire.getQtstock()));
+                    CodeEan.setText(inventaire.getEan());
+                    Numero.setText(inventaire.getNumero());
+                    Designation.setText(inventaire.getDesignation());
+                }
+                if (inventaire != null) {
+                    viewqt.setText(Integer.toString(inventaire.getQt()));
+                    QtStock.setText(Integer.toString(inventaire.getQtstock()));
+                    CodeEan.setText(inventaire.getEan());
+                    Numero.setText(inventaire.getNumero());
+                    Designation.setText(inventaire.getDesignation());
+
+                }
             }
+        }
     }
 
     private class SauveInventaire extends AsyncTask<Void, Void, Void> {
