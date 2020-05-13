@@ -119,11 +119,23 @@ public class activity_recherche_article extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // liaison du code enan à l'article et retour à l'inventaire
+                        String url2 = "";
+                        DatabaseHelper dbp = new DatabaseHelper(activity);
+                        Parametres parametres = new Parametres(0, "", 0);
+                        parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
+                        if (parametres == null) {
+                            Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+                            startActivity(parametreAcitivty);
+                            finish();
+                        } else {
+                            url2 = "http://" + parametres.getAdresse() + ':' + parametres.getPort();
+                        }
+
+                        url = url2+"/saveeancode?id=" + id2 +"&ean=" + codeEan;
+                        new   activity_recherche_article.SauveCodeEan().execute();
 
 
-                        Intent inventaireAcitivty = new Intent(getApplicationContext(), activity_inventaire.class);
-                        startActivity(inventaireAcitivty);
-                        finish();
+
                     }
                 });
                 mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
@@ -223,4 +235,52 @@ public class activity_recherche_article extends AppCompatActivity {
 
         }
     }
+    private class SauveCodeEan extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // show loading dialog
+            pDialog = new ProgressDialog(activity_recherche_article.this);
+            pDialog.setMessage("Enregistre ...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... Voids) {
+            HttpHandler sh = new HttpHandler();
+            String jsonStr = sh.makeServiceCall(url);
+            Log.e(TAG, "Réponse de url : " + jsonStr);
+            if (jsonStr != null) {
+
+
+            } else {
+                Log.e(TAG, " pas de réponse du serveur : ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity_recherche_article.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
+                        Intent paramAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+                        startActivity(paramAcitivty);
+                        finish();
+                    }
+                });
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            Intent inventaireAcitivty = new Intent(getApplicationContext(), activity_inventaire.class);
+            startActivity(inventaireAcitivty);
+            finish();
+
+        }
+    }
+
 }
