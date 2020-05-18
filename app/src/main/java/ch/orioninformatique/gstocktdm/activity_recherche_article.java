@@ -51,14 +51,13 @@ public class activity_recherche_article extends AppCompatActivity {
     private String codeEan = "";
     ArrayList<HashMap<String, String>> articleList;
     private SearchView searchView;
-    ArrayAdapter<HashMap<String,String>> adapter;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_recherche_article);
-        searchView = (SearchView) findViewById(R.id.searchView);
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra("codeEan")) {
@@ -66,11 +65,20 @@ public class activity_recherche_article extends AppCompatActivity {
             }
         }
         this.retour = findViewById(R.id.btrechercharticle);
+        articleList = new ArrayList<>();
+        lv = (ListView) findViewById(R.id.listView);
+        searchView = (SearchView) findViewById(R.id.searchView);
+
+        ListAdapter adapter = new SimpleAdapter(
+                activity_recherche_article.this,articleList,
+                R.layout.list_item_article,new String[]{"id","numero","designation"},
+                new int[]{R.id.id,R.id.numero,R.id.designation} );
+
+        lv.setAdapter(adapter);
 
         DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
-        articleList = new ArrayList<>();
-        lv = (ListView) findViewById(R.id.listView);
+
 
         parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
         if (parametres == null) {
@@ -82,8 +90,6 @@ public class activity_recherche_article extends AppCompatActivity {
             new GetArticles().execute();
 
         }
-//        adapter = new ArrayAdapter<HashMap<String, String>>(activity,android.R.layout.simple_list_item_1, (List<HashMap<String, String>>) lv);
-        lv.setAdapter(adapter);
 
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +108,7 @@ public class activity_recherche_article extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                ((SimpleAdapter) adapter).getFilter().filter(newText);
                 return false;
             }
         });
@@ -157,7 +164,7 @@ public class activity_recherche_article extends AppCompatActivity {
             super.onPreExecute();
             // show loading dialog
             pDialog = new ProgressDialog(activity_recherche_article.this);
-            pDialog.setMessage("Lecture ...");
+            pDialog.setMessage("Lecture des articles ...");
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -225,12 +232,6 @@ public class activity_recherche_article extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-            // mise à jour de json
-            ListAdapter adapter = new SimpleAdapter(
-                    activity_recherche_article.this,articleList,
-                    R.layout.list_item_article,new String[]{"id","numero","designation"},
-                    new int[]{R.id.id,R.id.numero,R.id.designation} );
-            lv.setAdapter(adapter);
 
 
         }

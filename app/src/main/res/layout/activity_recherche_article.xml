@@ -51,13 +51,16 @@
         android:id="@+id/searchView"
         android:layout_width="317dp"
         android:layout_height="54dp"
-        android:background="@color/colorPrimary"
-        android:iconifiedByDefault="false"
-        android:queryHint="Recherche une article"
-        tools:layout_editor_absoluteX="2dp"
-        tools:layout_editor_absoluteY="7dp"
         android:layout_alignParentTop="true"
-        android:focusable="true"/>
+        android:background="@color/colorPrimary"
+        android:focusable="auto"
+        android:iconifiedByDefault="false"
+
+        android:queryHint="Recherche une article"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="7dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

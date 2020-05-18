@@ -120,12 +120,12 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             new Getcommandes().execute();
 
         }
-        setupRecyclerView((RecyclerView) recyclerView);
+        //setupRecyclerView((RecyclerView) recyclerView);
 
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane,commandeList));
+       recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane,commandeList));
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -206,7 +206,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             super.onPreExecute();
             // show loading dialog
             pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Lecture des commandes ...");
+            pDialog.setMessage("Lecture des commandes clients ...");
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -273,9 +273,14 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-            // mise à jour de json
+            if (commandeList.size() > 0) {
+                View recyclerView = findViewById(R.id.activitycommandeclient_list);
+                assert recyclerView != null;
+                setupRecyclerView((RecyclerView) recyclerView);
+                for (int i = 0; i < commandeList.size(); i++) {
 
-
+                }
+            }
 
         }
     }

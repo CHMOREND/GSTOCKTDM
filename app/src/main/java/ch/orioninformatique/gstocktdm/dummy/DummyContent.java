@@ -25,13 +25,12 @@ public class DummyContent {
      * An array of sample (dummy) items.
      */
     public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
-
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 250;
+    private static final int COUNT = 15;
 
     static {
         // Add some sample items.
@@ -44,6 +43,7 @@ public class DummyContent {
 
         ITEMS.add(item);
         ITEM_MAP.put(item.numeroClient, item);
+        ITEM_MAP.put(item.nomclient, item);
     }
 
     private static DummyItem createDummyItem(int position) {
