@@ -12,8 +12,10 @@ import java.util.List;
 public class  DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ScannerDatabase.db";
+    private static final String DATABASE_NAME = "ScannerDatabase3.db";
     private static final String TABLE_INVENTAIRE = "inventaire";
+    private static final String TABLE_COMMANDECLIENT = "commandecl";
+    private static final String TABLE_COMMANDEFOURN = "commandefour";
     private static final String TABLE_PARAMETRES = "parametres";
     private static final String KEY_ID = "id";
     private static final String KEY_EAN = "ean";
@@ -21,6 +23,8 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_DESIGNATION = "designation";
     private static final String KEY_QT = "qt";
     private static final String KEY_QTSTOCK = "qtstock";
+    private static final String KEY_LIVRE = "qtlivre";
+    private static final String KEY_NUMLIGNE= "numligne";
 
     public DatabaseHelper(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -38,6 +42,16 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + "adresse TEXT," + "port INTEGER"+" )";
         db.execSQL(CREATE_PARAMETRES_TABLE);
+
+        String CREATE_COMMANDECLIENT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDECLIENT + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER"+" )";
+        db.execSQL(CREATE_COMMANDECLIENT_TABLE);
+
+        String CREATE_COMMANDEFOURN_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDEFOURN + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER"+" )";
+        db.execSQL(CREATE_COMMANDEFOURN_TABLE);
 
     }
 
