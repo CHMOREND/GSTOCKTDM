@@ -62,11 +62,7 @@ public class MainActivity extends AppCompatActivity {
         {
             url = "http://"+parametres.getAdresse()+':'+ parametres.getPort()+'/';
 
-//          url = "http://192.168.10.58:8081/article?ean=8058333424644";
-  //        url = "http://192.168.10.58:8081/articles";
 
-           //url = "https://api.androidhive.info/contacts/";
-            // ici contrôle de la connexion avec le serveur REST
             new GetArticle().execute();
 
 

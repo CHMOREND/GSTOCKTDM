@@ -12,7 +12,7 @@ import java.util.List;
 public class  DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ScannerDatabase6.db";
+    private static final String DATABASE_NAME = "ScannerDatabase.db";
     private static final String TABLE_INVENTAIRE = "inventaire";
     private static final String TABLE_PARAMETRES = "parametres";
     private static final String KEY_ID = "id";
