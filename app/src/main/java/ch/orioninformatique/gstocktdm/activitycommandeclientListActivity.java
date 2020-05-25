@@ -9,7 +9,6 @@
 package ch.orioninformatique.gstocktdm;
 
 import android.app.Activity;
-import android.app.LauncherActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -23,16 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,7 +120,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-       recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane,commandeList));
+       recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEM, mTwoPane,commandeList));
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -176,8 +171,8 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).numeroClient);
-            holder.mContentView.setText(mValues.get(position).nomclient);
+            holder.mDatebulletin.setText(mValues.get(position).numeroClient);
+            holder.mNomClient.setText(mValues.get(position).nomclient);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -189,13 +184,15 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
+            final TextView mDatebulletin;
+            final TextView mNomClient;
+            final TextView mNumBUlletin;
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mDatebulletin = (TextView) view.findViewById(R.id.datebulletin);
+                mNomClient = (TextView) view.findViewById(R.id.client);
+                mNumBUlletin = (TextView) view.findViewById(R.id.numBulletin);
             }
         }
     }
@@ -277,8 +274,24 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                 View recyclerView = findViewById(R.id.activitycommandeclient_list);
                 assert recyclerView != null;
                 setupRecyclerView((RecyclerView) recyclerView);
-                for (int i = 0; i < commandeList.size(); i++) {
+                final TextView mDatebulletin;
+                final TextView mNomClient;
+                final TextView mNumBUlletin;
 
+                mDatebulletin = (TextView) recyclerView.findViewById(R.id.datebulletin);
+                mNomClient = (TextView) recyclerView.findViewById(R.id.client);
+                mNumBUlletin = (TextView) recyclerView.findViewById(R.id.numBulletin);
+
+                for (int i = 0; i < commandeList.size(); i++) {
+                    HashMap<String, String> a = commandeList.get(i);
+                    String datelivraison = a.get("datelivraison");
+                    String nom = a.get("numclient")+" "+a.get("nomclient")+" "+a.get("ville");
+                    String numbulletin = a.get("numbulletin");
+                    HashMap<String,String> artic = new HashMap<>();
+                    artic.put("mDatebulletin",datelivraison);
+                    artic.put("mNomClient",nom);
+                    artic.put("mNumBUlletin",numbulletin);
+                    //recyclerView.add(artic);
                 }
             }
 

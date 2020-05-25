@@ -24,7 +24,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<DummyItem> ITEM = new ArrayList<DummyItem>();
     /**
      * A map of sample (dummy) items, by ID.
      */
@@ -41,13 +41,14 @@ public class DummyContent {
 
     private static void addItem(DummyItem item) {
 
-        ITEMS.add(item);
+        ITEM.add(item);
         ITEM_MAP.put(item.numeroClient, item);
         ITEM_MAP.put(item.nomclient, item);
+        ITEM_MAP.put(item.numbulletin, item);
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new DummyItem(String.valueOf(position), "Item " ,""+ position, makeDetails(position));
     }
 
     private static String makeDetails(int position) {
@@ -65,11 +66,13 @@ public class DummyContent {
     public static class DummyItem {
         public final String numeroClient;
         public final String nomclient;
+        public final String numbulletin;
         public final String details;
 
-        public DummyItem(String numeroClient, String nomclient, String details) {
+        public DummyItem(String numeroClient, String nomclient, String details,String numBulletin) {
             this.numeroClient = numeroClient;
             this.nomclient = nomclient;
+            this.numbulletin = numBulletin;
             this.details = details;
         }
 

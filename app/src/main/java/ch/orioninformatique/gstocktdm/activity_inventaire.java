@@ -69,7 +69,7 @@ public class activity_inventaire extends AppCompatActivity {
     private ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
     private String eanCode = "";
-    private Integer idStock;
+    private Integer idStock = 0;
     private Boolean allerRechercheStock = false;
     private String decodedData;
     @Override
@@ -101,7 +101,7 @@ public class activity_inventaire extends AppCompatActivity {
         CodeEan.setText("");
         QtStock.setText("");
         final Activity activity = this;
-
+        pDialog = new ProgressDialog(activity_inventaire.this);
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
@@ -244,64 +244,6 @@ public class activity_inventaire extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult scanningResult =
-                IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-
-            if (scanningResult != null) {
-            String scanContent = scanningResult.getContents();
-            String scanFormat = scanningResult.getFormatName();
-            if (scanContent.length() == 12) {
-                // ajout d'un 0 si le code est inférieure à 13 caractères
-                scanContent = "0" + scanningResult.getContents();
-            } else {
-                scanContent = scanningResult.getContents();
-            }
-            DatabaseHelper db = new DatabaseHelper(activity);
-            Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
-            inventaire = db.getInventaire(scanContent);
-            if (inventaire == null) {
-                // création de l'inventaire
-                Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
-                qt = 1;
-                inventaire1.setQt(1);
-                inventaire1.setQtstock(0);
-                inventaire1.setEan(scanContent);
-
-                inventaire1.setNumero(Numero.getText().toString());
-                inventaire1.setDesignation(Designation.getText().toString());
-                db.addInventaire(inventaire1);
-
-                viewqt.setText(Integer.toString(inventaire1.getQt()));
-                QtStock.setText(Integer.toString(inventaire1.getQtstock()));
-                CodeEan.setText(inventaire1.getEan());
-                Numero.setText(inventaire1.getNumero());
-                Designation.setText(inventaire1.getDesignation());
-
-            } else {
-                qt = inventaire.getQt();
-                qt++;
-                inventaire.setQt(qt);
-                db.updateInventaire(inventaire);
-            }
-            if (inventaire != null) {
-                viewqt.setText(Integer.toString(inventaire.getQt()));
-                QtStock.setText(Integer.toString(inventaire.getQtstock()));
-                CodeEan.setText(inventaire.getEan());
-                Numero.setText(inventaire.getNumero());
-                Designation.setText(inventaire.getDesignation());
-
-            }
-
-
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "Aucunne données de scan reçu !", Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
     private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -343,14 +285,17 @@ public class activity_inventaire extends AppCompatActivity {
         Parametres parametres = new Parametres(0, "", 0);
         parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
         if (parametres == null) {
-            Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
-            startActivity(parametreAcitivty);
-            finish();
+
         } else {
             url = "http://" + parametres.getAdresse() + ':' + parametres.getPort() + "/article?ean=" + decodedData;
-        }
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            } else
+            {
 
-        new   activity_inventaire.GetArticle().execute();
+            }
+            new activity_inventaire.GetArticle().execute();
+        }
     }
 
     private class GetArticle extends AsyncTask<Void, Void, Void> {
@@ -358,7 +303,7 @@ public class activity_inventaire extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             // show loading dialog
-            pDialog = new ProgressDialog(activity_inventaire.this);
+  //          pDialog = new ProgressDialog(activity_inventaire.this);
             pDialog.setMessage("Lecture ...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -412,9 +357,6 @@ public class activity_inventaire extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(activity_inventaire.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
-                        Intent paramAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
-                        startActivity(paramAcitivty);
-                        finish();
                     }
                 });
             }
@@ -428,9 +370,6 @@ public class activity_inventaire extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-
-            // mise à jour de json
-            //ListAdapter adapter
             if (idStock == 0) {
                 // message pas trouvé l'article
                 AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
