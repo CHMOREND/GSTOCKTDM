@@ -116,4 +116,10 @@
     <string name="title_activity_recherche_article">activity_recherche_article</string>
     <string name="title_activitycommandeclient_list">Commandes des clients</string>
     <string name="title_activitycommandeclient_detail">activity_commande_client Detail</string>
+    <string name="orion_informatique_sa_martigny">ORION INFORMATIQUE SA Martigny</string>
+    <string name="_15820202">15820202</string>
+    <string name="_01_04_2020">01.04.2020</string>
+    <string name="retourclient">RETOUR CLIENT</string>
+    <string name="commandefournisseur">COMMANDES FOURNISSEURS</string>
+    <string name="title_activityretour_client">Retour d\'un article</string>
 </resources>

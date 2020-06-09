@@ -71,6 +71,8 @@ public class activity_inventaire extends AppCompatActivity {
     private String eanCode = "";
     private Integer idStock = 0;
     private Boolean allerRechercheStock = false;
+    private Boolean pasDeReponseDuServeur = false;
+
     private String decodedData;
     @Override
     protected void onDestroy() {
@@ -348,6 +350,7 @@ public class activity_inventaire extends AppCompatActivity {
                         @Override
                         public void run() {
                             Toast.makeText(activity_inventaire.this, "JSON erreur paramètres : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            pasDeReponseDuServeur = true;
                         }
                     });
                 }
@@ -357,6 +360,7 @@ public class activity_inventaire extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(activity_inventaire.this, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
+                        pasDeReponseDuServeur = true;
                     }
                 });
             }
@@ -397,44 +401,47 @@ public class activity_inventaire extends AppCompatActivity {
 
             } else
             {
-
-                DatabaseHelper db = new DatabaseHelper(activity);
-                Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
-                inventaire = db.getInventaire(decodedData);
-                if (inventaire == null) {
-                    // création de l'inventaire
-                    Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
-                    inventaire1.setQt(1);
-                    inventaire1.setQtstock(Integer.parseInt(QtStock.getText().toString()));
-                    inventaire1.setEan(decodedData);
-                    inventaire1.setNumero(Numero.getText().toString());
-                    inventaire1.setDesignation(Designation.getText().toString());
-                    db.addInventaire(inventaire1);
-
-                    viewqt.setText(Integer.toString(inventaire1.getQt()));
-                    QtStock.setText(Integer.toString(inventaire1.getQtstock()));
-                    CodeEan.setText(inventaire1.getEan());
-                    Numero.setText(inventaire1.getNumero());
-                    Designation.setText(inventaire1.getDesignation());
+                if (pasDeReponseDuServeur) {
 
                 } else {
-                    qt = inventaire.getQt();
-                    qt++;
-                    inventaire.setQt(qt);
-                    db.updateInventaire(inventaire);
-                    viewqt.setText(Integer.toString(inventaire.getQt()));
-                    QtStock.setText(Integer.toString(inventaire.getQtstock()));
-                    CodeEan.setText(inventaire.getEan());
-                    Numero.setText(inventaire.getNumero());
-                    Designation.setText(inventaire.getDesignation());
-                }
-                if (inventaire != null) {
-                    viewqt.setText(Integer.toString(inventaire.getQt()));
-                    QtStock.setText(Integer.toString(inventaire.getQtstock()));
-                    CodeEan.setText(inventaire.getEan());
-                    Numero.setText(inventaire.getNumero());
-                    Designation.setText(inventaire.getDesignation());
+                    DatabaseHelper db = new DatabaseHelper(activity);
+                    Inventaire inventaire = new Inventaire(0, "", "", "", 1, 0);
+                    inventaire = db.getInventaire(decodedData);
+                    if (inventaire == null) {
+                        // création de l'inventaire
+                        Inventaire inventaire1 = new Inventaire("", "", "", 1, 0);
+                        inventaire1.setQt(1);
+                        inventaire1.setQtstock(Integer.parseInt(QtStock.getText().toString()));
+                        inventaire1.setEan(decodedData);
+                        inventaire1.setNumero(Numero.getText().toString());
+                        inventaire1.setDesignation(Designation.getText().toString());
+                        db.addInventaire(inventaire1);
 
+                        viewqt.setText(Integer.toString(inventaire1.getQt()));
+                        QtStock.setText(Integer.toString(inventaire1.getQtstock()));
+                        CodeEan.setText(inventaire1.getEan());
+                        Numero.setText(inventaire1.getNumero());
+                        Designation.setText(inventaire1.getDesignation());
+
+                    } else {
+                        qt = inventaire.getQt();
+                        qt++;
+                        inventaire.setQt(qt);
+                        db.updateInventaire(inventaire);
+                        viewqt.setText(Integer.toString(inventaire.getQt()));
+                        QtStock.setText(Integer.toString(inventaire.getQtstock()));
+                        CodeEan.setText(inventaire.getEan());
+                        Numero.setText(inventaire.getNumero());
+                        Designation.setText(inventaire.getDesignation());
+                    }
+                    if (inventaire != null) {
+                        viewqt.setText(Integer.toString(inventaire.getQt()));
+                        QtStock.setText(Integer.toString(inventaire.getQtstock()));
+                        CodeEan.setText(inventaire.getEan());
+                        Numero.setText(inventaire.getNumero());
+                        Designation.setText(inventaire.getDesignation());
+
+                    }
                 }
             }
         }

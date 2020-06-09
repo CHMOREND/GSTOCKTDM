@@ -12,39 +12,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:screenOrientation="portrait"
-    tools:context=".activityEntreeMarchandise">
+    tools:context=".activityRetourClient">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_barretourclient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarretourclient"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Retour d'un article" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <Button
         android:id="@+id/btRetourClient"
-        android:layout_width="270dp"
-        android:layout_height="77dp"
-        android:layout_marginBottom="108dp"
-        android:backgroundTint="#AAC886"
-        android:text="@string/retourclient"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btEntreeMarchandiseReretour"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btCommandeFournisseur"
-        android:layout_width="270dp"
-        android:layout_height="77dp"
-        android:layout_marginTop="104dp"
-        android:backgroundTint="#AAC886"
-        android:text="@string/commandefournisseur"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btEntreeMarchandiseReretour"
         android:layout_width="318dp"
-        android:layout_height="53dp"
+        android:layout_height="55dp"
         android:backgroundTint="#AAC886"
         android:text="@string/retour"
         android:textColor="#FFFFFF"

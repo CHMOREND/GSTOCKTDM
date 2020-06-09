@@ -27,7 +27,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +76,16 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.title_activitycommandeclient_list);
 
+        commandeList = new ArrayList<>();
+        lv = (ListView) findViewById(R.id.activitycommandeclient_container);
+
+        ListAdapter adapter = new SimpleAdapter(
+                activitycommandeclientListActivity.this,commandeList,
+                R.layout.activitycommandeclient_list_content,new String[]{"datelivraison","nomclient","numbulletin","montantBulletin"},
+                new int[]{R.id.datebulletin,R.id.client,R.id.numBulletin,R.id.montantBulletin} );
+
+        lv.setAdapter(adapter);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,25 +99,8 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.activitycommandeclient_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
-
-        View recyclerView = findViewById(R.id.activitycommandeclient_list);
-        assert recyclerView != null;
-//        setupRecyclerView((RecyclerView) recyclerView);
-
         DatabaseHelper dbp = new DatabaseHelper(activity);
-
         Parametres parametres = new Parametres(0, "", 0);
-        commandeList = new ArrayList<>();
-
-        lv = (ListView) findViewById(R.id.listView);
-
         parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
         if (parametres == null) {
             Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
@@ -115,7 +111,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             new Getcommandes().execute();
 
         }
-        //setupRecyclerView((RecyclerView) recyclerView);
 
     }
 
@@ -228,6 +223,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                             String ville = a.getString("ville");
                             String numbulletin = a.getString("numbull");
                             String datelivraison = a.getString("datelivraison");
+                            String montanttotal = a.getString("montanttotal");
 
                             HashMap<String, String> artic = new HashMap<>();
                             artic.put("numclient", numclient);
@@ -235,6 +231,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                             artic.put("ville", ville);
                             artic.put("numbulletin", numbulletin);
                             artic.put("datelivraison", datelivraison);
+                            artic.put("montanttotal", montanttotal);
 
                             commandeList.add(artic);
 
@@ -271,16 +268,10 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                 pDialog.dismiss();
             }
             if (commandeList.size() > 0) {
-                View recyclerView = findViewById(R.id.activitycommandeclient_list);
-                assert recyclerView != null;
-                setupRecyclerView((RecyclerView) recyclerView);
-                final TextView mDatebulletin;
-                final TextView mNomClient;
-                final TextView mNumBUlletin;
 
-                mDatebulletin = (TextView) recyclerView.findViewById(R.id.datebulletin);
-                mNomClient = (TextView) recyclerView.findViewById(R.id.client);
-                mNumBUlletin = (TextView) recyclerView.findViewById(R.id.numBulletin);
+                //setupRecyclerView((RecyclerView) recyclerView);
+
+                /**
 
                 for (int i = 0; i < commandeList.size(); i++) {
                     HashMap<String, String> a = commandeList.get(i);
@@ -288,11 +279,12 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                     String nom = a.get("numclient")+" "+a.get("nomclient")+" "+a.get("ville");
                     String numbulletin = a.get("numbulletin");
                     HashMap<String,String> artic = new HashMap<>();
-                    artic.put("mDatebulletin",datelivraison);
-                    artic.put("mNomClient",nom);
-                    artic.put("mNumBUlletin",numbulletin);
-                    //recyclerView.add(artic);
+                    artic.put("Datebulletin",datelivraison);
+                    artic.put("NomClient",nom);
+                    artic.put("NumBUlletin",numbulletin);
+
                 }
+                */
             }
 
         }
