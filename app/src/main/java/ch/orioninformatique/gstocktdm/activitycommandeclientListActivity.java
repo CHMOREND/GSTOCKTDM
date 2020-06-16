@@ -86,18 +86,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
         lv.setAdapter(adapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(inventaireAcitivty);
-                finish();
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //                      .setAction("Action", null).show();
-            }
-        });
 
         DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
