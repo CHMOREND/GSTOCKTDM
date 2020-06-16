@@ -48,33 +48,18 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewDesignation2" />
 
     <Button
-        android:id="@+id/btinventaireretour"
+        android:id="@+id/btmetajourinventaire"
         android:layout_width="321dp"
-        android:layout_height="53dp"
+        android:layout_height="57dp"
         android:backgroundTint="#AAC886"
-        android:text="@string/retour"
+        android:text="@string/mettreajour"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/btmetajourinventaire"
-        android:layout_width="321dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="380dp"
-        android:backgroundTint="#AAC886"
-        android:text="@string/mettreajour"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/btinventaireretour"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.904" />
 
     <Button
         android:id="@+id/btMoins"
@@ -208,7 +193,6 @@
         android:textColor="#FFFFFF"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewQt" />
 

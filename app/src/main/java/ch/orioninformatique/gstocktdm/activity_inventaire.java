@@ -55,7 +55,6 @@ public class activity_inventaire extends AppCompatActivity {
     private Button btmoins;
     private Button btajourinventaire;
     private TextView viewqt;
-    private Button retour;
     private Button scanner;
     private activity_inventaire activity;
     private TextView Numero;
@@ -97,7 +96,6 @@ public class activity_inventaire extends AppCompatActivity {
         this.btplus = findViewById(R.id.buttonPlus);
         this.btmoins = findViewById(R.id.btMoins);
         this.viewqt = (TextView) findViewById(R.id.textViewQt);
-        this.retour = findViewById(R.id.btinventaireretour);
         Numero.setText("");
         Designation.setText("");
         CodeEan.setText("");
@@ -209,12 +207,7 @@ public class activity_inventaire extends AppCompatActivity {
                 }
             }
         });
-        retour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+
     }
 
 
