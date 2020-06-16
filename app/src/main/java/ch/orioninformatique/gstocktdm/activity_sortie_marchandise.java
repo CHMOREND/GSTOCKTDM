@@ -22,10 +22,7 @@ public class activity_sortie_marchandise extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(inventaireAcitivty);
-                finish();
-
+                onBackPressed();
             }
         });
     }

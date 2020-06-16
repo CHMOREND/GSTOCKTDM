@@ -212,35 +212,7 @@ public class activity_inventaire extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHelper db = new DatabaseHelper(activity);
-                Integer nbrInventaire = db.GetInventaireCount();
-                if (nbrInventaire > 0) {
-                    AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
-                    mypopup.setTitle("Abandonner ?");
-                    mypopup.setMessage("Vous n'avez pas enregistrer l'inventaire, voulez-vous vraiment sortir");
-                    mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(inventaireAcitivty);
-                            finish();
-                        }
-                    });
-                    mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    mypopup.show();
-
-                } else {
-                    Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(inventaireAcitivty);
-                    finish();
-
-
-                }
+                onBackPressed();
             }
         });
     }

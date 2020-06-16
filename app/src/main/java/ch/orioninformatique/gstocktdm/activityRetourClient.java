@@ -74,10 +74,7 @@ public class activityRetourClient extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(),activityEntreeMarchandise.class);
-                startActivity(inventaireAcitivty);
-                finish();
-
+                onBackPressed();
             }
         });
     }
