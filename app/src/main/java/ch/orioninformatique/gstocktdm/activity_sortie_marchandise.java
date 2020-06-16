@@ -29,4 +29,10 @@ public class activity_sortie_marchandise extends AppCompatActivity {
             }
         });
     }
+    public void onBackPressed() {
+        Intent inventaireAcitivty = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(inventaireAcitivty);
+        finish();
+
+    }
 }

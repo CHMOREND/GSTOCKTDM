@@ -289,5 +289,9 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
         }
     }
-
+    public void onBackPressed() {
+        Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(inventaireAcitivty);
+        finish();
+    }
 }

@@ -91,4 +91,10 @@ public class activitycommandeclientDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void onBackPressed() {
+        Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(inventaireAcitivty);
+        finish();
+    }
 }

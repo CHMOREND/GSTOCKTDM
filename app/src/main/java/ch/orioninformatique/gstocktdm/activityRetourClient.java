@@ -262,5 +262,10 @@ public class activityRetourClient extends AppCompatActivity {
             Toast.makeText(activityRetourClient.this, "L'article " + numArticle + " à été enregsitré en retour !", Toast.LENGTH_SHORT).show();
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        Intent inventaireAcitivty = new Intent(getApplicationContext(),activityEntreeMarchandise.class);
+        startActivity(inventaireAcitivty);
+        finish();
+    }
 }

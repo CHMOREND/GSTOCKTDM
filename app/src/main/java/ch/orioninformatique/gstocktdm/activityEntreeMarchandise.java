@@ -25,7 +25,7 @@ public class activityEntreeMarchandise extends AppCompatActivity {
         retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(),MainActivity.class);
+                Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(inventaireAcitivty);
                 finish();
 
@@ -40,5 +40,12 @@ public class activityEntreeMarchandise extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(inventaireAcitivty);
+
     }
 }

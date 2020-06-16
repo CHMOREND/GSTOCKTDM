@@ -176,4 +176,7 @@ public class MainActivity extends AppCompatActivity {
             //ListAdapter adapter
         }
     }
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }
