@@ -30,17 +30,4 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-    <Button
-        android:id="@+id/btRetourClient"
-        android:layout_width="318dp"
-        android:layout_height="55dp"
-        android:backgroundTint="#AAC886"
-        android:text="@string/retour"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

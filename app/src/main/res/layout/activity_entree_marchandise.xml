@@ -19,20 +19,21 @@
         android:id="@+id/btRetourClient"
         android:layout_width="270dp"
         android:layout_height="77dp"
-        android:layout_marginBottom="108dp"
         android:backgroundTint="#AAC886"
         android:text="@string/retourclient"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btEntreeMarchandiseReretour"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btCommandeFournisseur"
+        app:layout_constraintVertical_bias="0.502" />
 
     <Button
         android:id="@+id/btCommandeFournisseur"
         android:layout_width="270dp"
         android:layout_height="77dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="140dp"
         android:backgroundTint="#AAC886"
         android:text="@string/commandefournisseur"
         android:textColor="#FFFFFF"
@@ -41,17 +42,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btEntreeMarchandiseReretour"
-        android:layout_width="318dp"
-        android:layout_height="53dp"
-        android:backgroundTint="#AAC886"
-        android:text="@string/retour"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

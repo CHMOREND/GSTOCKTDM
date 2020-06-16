@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 public class activityEntreeMarchandise extends AppCompatActivity {
-    private Button retour;
     private Button retourClient;
     private Button commandesFourniiseurs;
 
@@ -19,18 +18,10 @@ public class activityEntreeMarchandise extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_entree_marchandise);
-        this.retour = findViewById(R.id.btEntreeMarchandiseReretour);
         this.retourClient = findViewById(R.id.btRetourClient);
         this.commandesFourniiseurs = findViewById(R.id.btCommandeFournisseur);
-        retour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(inventaireAcitivty);
-                finish();
 
-            }
-        });
+
         retourClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,6 +37,7 @@ public class activityEntreeMarchandise extends AppCompatActivity {
     public void onBackPressed() {
         Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(inventaireAcitivty);
+        finish();
 
     }
 }

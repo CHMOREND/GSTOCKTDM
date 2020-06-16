@@ -30,7 +30,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class activityRetourClient extends AppCompatActivity {
-    private Button retour;
     private String url;
     private String url2;
     private EMDKManager emdkManager;
@@ -70,13 +69,7 @@ public class activityRetourClient extends AppCompatActivity {
             url2 = "http://" + parametres.getAdresse() + ':' + parametres.getPort();
         }
 
-        this.retour = findViewById(R.id.btRetourClient);
-        retour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+
     }
     private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
         @Override
