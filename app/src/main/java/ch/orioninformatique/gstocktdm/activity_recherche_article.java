@@ -42,7 +42,6 @@ import java.util.List;
 
 public class activity_recherche_article extends AppCompatActivity {
 
-    private Button retour;
     private String url;
     private Activity activity = this;
     private  ProgressDialog pDialog;
@@ -64,7 +63,6 @@ public class activity_recherche_article extends AppCompatActivity {
                 codeEan = intent.getStringExtra("codeEan");
             }
         }
-        this.retour = findViewById(R.id.btrechercharticle);
         articleList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.listView);
         searchView = (SearchView) findViewById(R.id.searchView);
@@ -91,15 +89,7 @@ public class activity_recherche_article extends AppCompatActivity {
 
         }
 
-        retour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent inventaireAcitivty = new Intent(getApplicationContext(), activity_inventaire.class);
-                startActivity(inventaireAcitivty);
-                finish();
 
-            }
-        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -282,6 +272,13 @@ public class activity_recherche_article extends AppCompatActivity {
             finish();
 
         }
+    }
+    public void onBackPressed() {
+        Intent inventaireAcitivty = new Intent(getApplicationContext(), activity_inventaire.class);
+        startActivity(inventaireAcitivty);
+        finish();
+
+
     }
 
 }
