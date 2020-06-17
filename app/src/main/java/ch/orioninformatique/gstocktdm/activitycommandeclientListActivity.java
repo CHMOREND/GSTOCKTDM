@@ -259,7 +259,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
                 //setupRecyclerView((RecyclerView) recyclerView);
 
-                /**
+
 
                 for (int i = 0; i < commandeList.size(); i++) {
                     HashMap<String, String> a = commandeList.get(i);
@@ -272,7 +272,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                     artic.put("NumBUlletin",numbulletin);
 
                 }
-                */
             }
 
         }

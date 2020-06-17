@@ -29,7 +29,6 @@
         </activity>
         <activity android:name=".activity_recherche_article" />
         <activity android:name=".activity_Parametre" />
-        <activity android:name=".activity_sortie_marchandise" />
         <activity android:name=".activityEntreeMarchandise" />
         <activity android:name=".activity_inventaire" />
         <activity
