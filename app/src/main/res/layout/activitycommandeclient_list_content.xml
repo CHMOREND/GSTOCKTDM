@@ -1,61 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/numbulletin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="@string/_15820202"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/datebulletin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
         android:text="@string/_01_04_2020"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textSize="12dp" />
 
     <TextView
-        android:id="@+id/client"
-        android:layout_width="297dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="28dp"
+        android:id="@+id/nomclient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/orion_informatique_sa_martigny"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="@+id/datebulletin"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textSize="14dp" />
 
     <TextView
-        android:id="@+id/numBulletin"
-        android:layout_width="89dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="10dp"
-
-        android:text="@string/_15820202"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toEndOf="@+id/datebulletin"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/montantBulletin"
-        android:layout_width="89dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="10dp"
+        android:id="@+id/montantbulletin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
         android:text="128.00"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/client"
-        app:layout_constraintHorizontal_bias="0.839"
-        app:layout_constraintStart_toEndOf="@+id/numBulletin"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textSize="12dp" />
+
+
+</LinearLayout>

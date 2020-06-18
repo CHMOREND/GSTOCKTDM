@@ -9,8 +9,10 @@
 package ch.orioninformatique.gstocktdm;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
@@ -27,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -38,27 +41,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.orioninformatique.gstocktdm.dummy.DummyContent;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * An activity representing a list of activity_commande_client_detail. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link activitycommandeclientDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
+
 public class activitycommandeclientListActivity extends AppCompatActivity {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
     private String TAG = MainActivity.class.getSimpleName();
     private ListView lv;
     private Activity activity = this;
@@ -69,7 +58,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_activitycommandeclient_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -77,12 +66,13 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.title_activitycommandeclient_list);
 
         commandeList = new ArrayList<>();
-        lv = (ListView) findViewById(R.id.activitycommandeclient_container);
+        lv = (ListView) findViewById(R.id.listViewcl);
 
         ListAdapter adapter = new SimpleAdapter(
                 activitycommandeclientListActivity.this,commandeList,
-                R.layout.activitycommandeclient_list_content,new String[]{"datelivraison","nomclient","numbulletin","montantBulletin"},
-                new int[]{R.id.datebulletin,R.id.client,R.id.numBulletin,R.id.montantBulletin} );
+                R.layout.activitycommandeclient_list_content,new String[]{"datebulletin","nomclient","numbulletin","montantbulletin"},
+                new int[]{R.id.datebulletin,R.id.nomclient,R.id.numbulletin,R.id.montantbulletin} );
+
 
         lv.setAdapter(adapter);
 
@@ -99,85 +89,18 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             new Getcommandes().execute();
 
         }
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+         @Override
+         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+             String datebulletin = ((TextView) view.findViewById(R.id.datebulletin)).getText().toString();
+             String nomclient = ((TextView) view.findViewById(R.id.nomclient)).getText().toString();
+             String numbulletin = ((TextView) view.findViewById(R.id.numbulletin)).getText().toString();
+             String montantbulletin = ((TextView) view.findViewById(R.id.montantbulletin)).getText().toString();
 
-    }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-       recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEM, mTwoPane,commandeList));
-    }
+         }
+        });
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-
-        private final activitycommandeclientListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
-        private final ArrayList<HashMap<String, String>> mcommandeListe;
-        private final boolean mTwoPane;
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(activitycommandeclientDetailFragment.ARG_ITEM_ID, item.numeroClient);
-                    activitycommandeclientDetailFragment fragment = new activitycommandeclientDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.activitycommandeclient_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, activitycommandeclientDetailActivity.class);
-                    intent.putExtra(activitycommandeclientDetailFragment.ARG_ITEM_ID, item.numeroClient);
-
-                    context.startActivity(intent);
-                }
-            }
-        };
-
-        SimpleItemRecyclerViewAdapter(activitycommandeclientListActivity parent,
-                                      List<DummyContent.DummyItem> items,
-                                      boolean twoPane,
-                                      ArrayList<HashMap<String, String>> commandeList) {
-            mcommandeListe = commandeList;
-            mValues = items;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.activitycommandeclient_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mDatebulletin.setText(mValues.get(position).numeroClient);
-            holder.mNomClient.setText(mValues.get(position).nomclient);
-
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mDatebulletin;
-            final TextView mNomClient;
-            final TextView mNumBUlletin;
-
-            ViewHolder(View view) {
-                super(view);
-                mDatebulletin = (TextView) view.findViewById(R.id.datebulletin);
-                mNomClient = (TextView) view.findViewById(R.id.client);
-                mNumBUlletin = (TextView) view.findViewById(R.id.numBulletin);
-            }
-        }
     }
 
     private class Getcommandes extends AsyncTask<Void, Void, Void> {
@@ -214,12 +137,10 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                             String montanttotal = a.getString("montanttotal");
 
                             HashMap<String, String> artic = new HashMap<>();
-                            artic.put("numclient", numclient);
-                            artic.put("nomclient", nomclient);
-                            artic.put("ville", ville);
+                            artic.put("datebulletin", datelivraison);
+                            artic.put("nomclient", numclient+" " +nomclient+" "+ ville);
                             artic.put("numbulletin", numbulletin);
-                            artic.put("datelivraison", datelivraison);
-                            artic.put("montanttotal", montanttotal);
+                            artic.put("montantbulletin", montanttotal);
 
                             commandeList.add(artic);
 
@@ -255,30 +176,15 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-            if (commandeList.size() > 0) {
-
-                //setupRecyclerView((RecyclerView) recyclerView);
-
-
-
-                for (int i = 0; i < commandeList.size(); i++) {
-                    HashMap<String, String> a = commandeList.get(i);
-                    String datelivraison = a.get("datelivraison");
-                    String nom = a.get("numclient")+" "+a.get("nomclient")+" "+a.get("ville");
-                    String numbulletin = a.get("numbulletin");
-                    HashMap<String,String> artic = new HashMap<>();
-                    artic.put("Datebulletin",datelivraison);
-                    artic.put("NomClient",nom);
-                    artic.put("NumBUlletin",numbulletin);
-
-                }
-            }
 
         }
+
     }
+
     public void onBackPressed() {
         Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(inventaireAcitivty);
         finish();
     }
+
 }

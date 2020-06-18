@@ -114,7 +114,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_recherche_article">activity_recherche_article</string>
-    <string name="title_activitycommandeclient_list">Commandes des clients</string>
+    <string name="title_activitycommandeclient_list">Commandes des clients...</string>
     <string name="title_activitycommandeclient_detail">activity_commande_client Detail</string>
     <string name="orion_informatique_sa_martigny">ORION INFORMATIQUE SA Martigny</string>
     <string name="_15820202">15820202</string>

@@ -1,55 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    tools:context=".activitycommandeclientListActivity">
+    tools:context=".activitycommandeclientListActivity"
+    tools:layout_editor_absoluteY="25dp">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="684dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-
-    </FrameLayout>
 
     <ListView
+        android:id="@+id/listViewcl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-        android:id="@+id/activitycommandeclient_container"
-        android:layout_width="391dp"
-        android:layout_height="643dp"
-        app:layout_anchor="@+id/frameLayout"
-        app:layout_anchorGravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.54"
-        >
-
-
+        app:layout_constraintTop_toBottomOf="@+id/app_barrecommandecl">
 
 
     </ListView>
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_barretourcleint"
+<com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_barrecommandecl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="Commande des clients" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
