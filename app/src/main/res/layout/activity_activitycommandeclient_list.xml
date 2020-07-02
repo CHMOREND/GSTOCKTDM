@@ -14,26 +14,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@+id/app_barrecommandecl">
+        app:layout_constraintTop_toBottomOf="@+id/searchViewcl">
 
 
     </ListView>
 
-<com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_barrecommandecl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_constraintTop_toTopOf="parent">
+    <SearchView
+        android:id="@+id/searchViewcl"
+        android:layout_width="317dp"
+        android:layout_height="54dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
+        android:focusable="auto"
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Commande des clients" />
+        android:iconifiedByDefault="false"
+        android:queryHint="Recherche une article"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="0dp" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

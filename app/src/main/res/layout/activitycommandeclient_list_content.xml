@@ -11,7 +11,7 @@
         android:id="@+id/numbulletin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+android:textColor="@color/colorPrimary"
         android:text="@string/_15820202"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textSize="12dp" />

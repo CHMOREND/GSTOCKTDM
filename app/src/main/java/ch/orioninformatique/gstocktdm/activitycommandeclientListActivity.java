@@ -53,6 +53,8 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
     private Activity activity = this;
     private String url;
     private  ProgressDialog pDialog;
+    private String jsonStr;
+    private SearchView searchView;
     ArrayList<HashMap<String, String>> commandeList;
 
     @Override
@@ -61,12 +63,10 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_activitycommandeclient_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.title_activitycommandeclient_list);
 
         commandeList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.listViewcl);
+        searchView = (SearchView) findViewById(R.id.searchViewcl);
 
         ListAdapter adapter = new SimpleAdapter(
                 activitycommandeclientListActivity.this,commandeList,
@@ -75,7 +75,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
 
         lv.setAdapter(adapter);
-
 
         DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
@@ -88,18 +87,36 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             url = "http://" + parametres.getAdresse() + ':' + parametres.getPort() + "/commandecl";
             new Getcommandes().execute();
 
+
         }
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-         @Override
-         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-             String datebulletin = ((TextView) view.findViewById(R.id.datebulletin)).getText().toString();
-             String nomclient = ((TextView) view.findViewById(R.id.nomclient)).getText().toString();
-             String numbulletin = ((TextView) view.findViewById(R.id.numbulletin)).getText().toString();
-             String montantbulletin = ((TextView) view.findViewById(R.id.montantbulletin)).getText().toString();
 
 
-         }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ((SimpleAdapter) adapter).getFilter().filter(newText);
+                return false;
+            }
         });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String datebulletin = ((TextView) view.findViewById(R.id.datebulletin)).getText().toString();
+                String nomclient = ((TextView) view.findViewById(R.id.nomclient)).getText().toString();
+                String numbulletin = ((TextView) view.findViewById(R.id.numbulletin)).getText().toString();
+                String montantbulletin = ((TextView) view.findViewById(R.id.montantbulletin)).getText().toString();
+
+
+            }
+        });
+
+
 
     }
 
@@ -117,7 +134,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... Voids) {
             HttpHandler sh = new HttpHandler();
-            String jsonStr = sh.makeServiceCall(url);
+            jsonStr = sh.makeServiceCall(url);
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
@@ -163,10 +180,11 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
+
                     }
                 });
             }
-            return null;
+           return null;
         }
 
 
@@ -176,6 +194,12 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
+
+
+                    for (int i = 0; i < commandeList.size(); i++) {
+
+                    }
+
 
         }
 
