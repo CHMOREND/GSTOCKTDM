@@ -112,6 +112,11 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                 String numbulletin = ((TextView) view.findViewById(R.id.numbulletin)).getText().toString();
                 String montantbulletin = ((TextView) view.findViewById(R.id.montantbulletin)).getText().toString();
 
+                Intent inventaireAcitivty = new Intent(getApplicationContext(), activityDetailCommandeClient.class);
+                startActivity(inventaireAcitivty);
+                finish();
+
+
 
             }
         });
