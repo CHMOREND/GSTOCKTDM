@@ -28,7 +28,7 @@
         android:focusable="auto"
 
         android:iconifiedByDefault="false"
-        android:queryHint="Recherche une article"
+        android:queryHint="Recherche une commande client"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -20,7 +20,15 @@ public class activityEntreeMarchandise extends AppCompatActivity {
         setContentView(R.layout.activity_entree_marchandise);
         this.retourClient = findViewById(R.id.btRetourClient);
         this.commandesFourniiseurs = findViewById(R.id.btCommandeFournisseur);
+        commandesFourniiseurs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
+                startActivity(inventaireAcitivty);
+                finish();
 
+            }
+        });
 
         retourClient.setOnClickListener(new View.OnClickListener() {
             @Override
