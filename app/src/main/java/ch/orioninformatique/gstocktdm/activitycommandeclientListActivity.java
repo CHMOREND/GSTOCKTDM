@@ -112,12 +112,14 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                 String numbulletin = ((TextView) view.findViewById(R.id.numbulletin)).getText().toString();
                 String montantbulletin = ((TextView) view.findViewById(R.id.montantbulletin)).getText().toString();
 
-                Intent inventaireAcitivty = new Intent(getApplicationContext(), activityDetailCommandeClient.class);
-                startActivity(inventaireAcitivty);
+                Intent i = new Intent(getApplicationContext(), activityDetailCommandeClient.class);
+                i .putExtra("datebulletin",datebulletin);
+                i .putExtra("nomclient",nomclient);
+                i .putExtra("numbulletin",numbulletin);
+                i .putExtra("montantbulletin",montantbulletin);
+                startActivity(i);
+
                 finish();
-
-
-
             }
         });
 
@@ -140,6 +142,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         protected Void doInBackground(Void... Voids) {
             HttpHandler sh = new HttpHandler();
             jsonStr = sh.makeServiceCall(url);
+            String nomclient = null;
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
@@ -152,7 +155,16 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                         for (int i = 0; i < article.length(); i++) {
                             JSONObject a = article.getJSONObject(i);
                             String numclient = a.getString("numclient");
-                            String nomclient = a.getString("nomclient");
+
+                            nomclient = a.getString("nomclient");
+
+/*                            try {
+                                nomclient = new String(a.getString("nomclient").getBytes("UTF-8"),"ISO-8859-1");
+                            } catch (java.io.UnsupportedEncodingException e){
+
+                            };
+*/
+                            //String nomclient = a.getString("nomclient");
                             String ville = a.getString("ville");
                             String numbulletin = a.getString("numbull");
                             String datelivraison = a.getString("datelivraison");
@@ -160,11 +172,22 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
                             HashMap<String, String> artic = new HashMap<>();
                             artic.put("datebulletin", datelivraison);
+
+
                             artic.put("nomclient", numclient+" " +nomclient+" "+ ville);
                             artic.put("numbulletin", numbulletin);
                             artic.put("montantbulletin", montanttotal);
+                            JSONArray ligne = a.getJSONArray("detail");
+                            for (int j = 0; j < ligne.length(); j++) {
+                                JSONObject d = ligne.getJSONObject(j);
+                                String numligne = d.getString("numligne");
+                                String qt = d.getString("qt");
+                                String prix = d.getString("prix");
+                                String numarticle = d.getString("numarticle");
+                                String ean = d.getString("ean");
+                            }
 
-                            commandeList.add(artic);
+                                commandeList.add(artic);
 
 
                         }

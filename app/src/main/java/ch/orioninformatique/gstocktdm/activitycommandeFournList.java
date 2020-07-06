@@ -95,6 +95,13 @@ public class activitycommandeFournList extends AppCompatActivity {
                 String numbulletin = ((TextView) view.findViewById(R.id.numbulletin)).getText().toString();
                 String montantbulletin = ((TextView) view.findViewById(R.id.montantbulletin)).getText().toString();
 
+                Intent i = new Intent(getApplicationContext(), activityDetailCommandeFour.class);
+                i .putExtra("datebulletin",datebulletin);
+                i .putExtra("nomclient",nomclient);
+                i .putExtra("numbulletin",numbulletin);
+                i .putExtra("montantbulletin",montantbulletin);
+                startActivity(i);
+                finish();
 
             }
         });
@@ -141,7 +148,15 @@ public class activitycommandeFournList extends AppCompatActivity {
                             artic.put("nomclient", numclient+" " +nomclient+" "+ ville);
                             artic.put("numbulletin", numbulletin);
                             artic.put("montantbulletin", montanttotal);
-
+                            JSONArray ligne = a.getJSONArray("detail");
+                            for (int j = 0; j < ligne.length(); j++) {
+                                JSONObject d = ligne.getJSONObject(j);
+                                String numligne = d.getString("numligne");
+                                String qt = d.getString("qt");
+                                String prix = d.getString("prix");
+                                String numarticle = d.getString("numarticle");
+                                String ean = d.getString("ean");
+                            }
                             commandeList.add(artic);
 
 

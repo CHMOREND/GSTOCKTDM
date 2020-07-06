@@ -13,7 +13,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activityDetailCommandeClient"
+    tools:context=".activityDetailCommandeFour"
     tools:ignore="MergeRootFrame">
 
     <androidx.core.widget.NestedScrollView
@@ -25,42 +25,42 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/app_barfour"
         android:layout_width="match_parent"
         android:layout_height="103dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView
-            android:id="@+id/textViewNumero"
+            android:id="@+id/textViewNumerofour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="Numéro" />
 
         <TextView
-            android:id="@+id/textViewdate"
+            android:id="@+id/textViewdatefour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="date" />
 
         <TextView
-            android:id="@+id/textViewClient"
+            android:id="@+id/textViewClientfour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="Client" />
 
         <TextView
-            android:id="@+id/textViewMontant"
+            android:id="@+id/textViewMontantfour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Montant"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/toolbar_layoutfour"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:fitsSystemWindows="true"
@@ -73,7 +73,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabcommandedetail"
+        android:id="@+id/fabcommandedetailfour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"

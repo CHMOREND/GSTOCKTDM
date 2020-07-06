@@ -9,35 +9,32 @@
 package ch.orioninformatique.gstocktdm;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ButtonBarLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class activityDetailCommandeClient extends AppCompatActivity {
+public class activityDetailCommandeFour extends AppCompatActivity {
     private FloatingActionButton enregistre;
     private TextView r;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_commande_client);
-        enregistre =   (FloatingActionButton) findViewById(R.id.fabcommandedetail);
+        setContentView(R.layout.activity_detail_commande_four);
+        enregistre =   (FloatingActionButton) findViewById(R.id.fabcommandedetailfour);
         if (savedInstanceState == null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 if (bundle.getString("datebulletin") != null) {
-                    r =   (TextView) findViewById(R.id.textViewdate);
+                    r =   (TextView) findViewById(R.id.textViewdatefour);
                     r.setText(bundle.getString("datebulletin"));
                 }
                 if (bundle.getString("nomclient") != null) {
-                    r =   (TextView) findViewById(R.id.textViewClient);
+                    r =   (TextView) findViewById(R.id.textViewClientfour);
                     try {
                         String out = new String(bundle.getString("nomclient").getBytes("UTF-8"), "ISO-8859-1");
                         r.setText(out);
@@ -48,11 +45,11 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                     r.setText(bundle.getString("nomclient"));
                 }
                 if (bundle.getString("numbulletin") != null) {
-                    r =   (TextView) findViewById(R.id.textViewNumero);
+                    r =   (TextView) findViewById(R.id.textViewNumerofour);
                     r.setText(bundle.getString("numbulletin"));
                 }
                 if (bundle.getString("montantbulletin") != null) {
-                    r =   (TextView) findViewById(R.id.textViewMontant);
+                    r =   (TextView) findViewById(R.id.textViewMontantfour);
                     r.setText(bundle.getString("montantbulletin"));
                 }
             }
