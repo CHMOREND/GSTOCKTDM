@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.nio.charset.StandardCharsets;
+
 public class activityDetailCommandeFour extends AppCompatActivity {
     private FloatingActionButton enregistre;
     private TextView r;
@@ -35,14 +37,10 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 }
                 if (bundle.getString("nomclient") != null) {
                     r =   (TextView) findViewById(R.id.textViewClientfour);
-                    try {
-                        String out = new String(bundle.getString("nomclient").getBytes("UTF-8"), "ISO-8859-1");
-                        r.setText(out);
-                    } catch (java.io.UnsupportedEncodingException e){
-
-                    };
-
-                    r.setText(bundle.getString("nomclient"));
+                    String rawString = bundle.getString("nomclient");
+                    byte[] bytes = rawString.getBytes(StandardCharsets.UTF_8);
+                    String utf8EncodedString = new String(bytes, StandardCharsets.UTF_8);
+                    r.setText(utf8EncodedString);
                 }
                 if (bundle.getString("numbulletin") != null) {
                     r =   (TextView) findViewById(R.id.textViewNumerofour);

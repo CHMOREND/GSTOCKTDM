@@ -81,5 +81,11 @@
         app:layout_anchor="@+id/activitycommandeclient_detail_container"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@android:drawable/ic_menu_add" />
+    <ListView
+        android:id="@+id/listViewDetailFourn"
+        android:layout_width="wrap_content"
+        android:layout_height="322dp"
+        app:layout_anchor="@+id/activitycommandeclient_detail_container"
+        app:layout_anchorGravity="center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

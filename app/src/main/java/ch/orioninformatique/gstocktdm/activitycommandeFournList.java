@@ -148,20 +148,28 @@ public class activitycommandeFournList extends AppCompatActivity {
                             artic.put("nomclient", numclient+" " +nomclient+" "+ ville);
                             artic.put("numbulletin", numbulletin);
                             artic.put("montantbulletin", montanttotal);
-                            JSONArray ligne = a.getJSONArray("detail");
-                            for (int j = 0; j < ligne.length(); j++) {
-                                JSONObject d = ligne.getJSONObject(j);
-                                String numligne = d.getString("numligne");
-                                String qt = d.getString("qt");
-                                String prix = d.getString("prix");
-                                String numarticle = d.getString("numarticle");
-                                String ean = d.getString("ean");
-                            }
+                            try {
+                                JSONArray ligne = a.getJSONArray("detail");
+                                for (int j = 0; j < ligne.length(); j++) {
+                                    JSONObject d = ligne.getJSONObject(j);
+                                    String numligne = d.getString("numligne");
+                                    String qt = d.getString("qt");
+                                    String prix = d.getString("prix");
+                                    String numarticle = d.getString("numarticle");
+                                    String ean = d.getString("ean");
+                                    DatabaseHelper db = new DatabaseHelper(activity);
+                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0);
+                                    commandes = db.getCommandesClient(numligne, numbulletin);
+                                    if (commandes == null) {
+                                        commandes = new Commandes(0, ean, numbulletin, Integer.parseInt(qt), 0, numarticle, Integer.parseInt(numligne));
+                                        db.addCommandeFourn(commandes);
+                                    }
+                                }
+                            } catch (final JSONException e){
+
+                            };
                             commandeList.add(artic);
-
-
                         }
-
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "JSON erreur paramètres : " + e.getMessage());

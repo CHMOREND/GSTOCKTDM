@@ -72,6 +72,84 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
     }
+    public Commandes getCommandesClient(String numligne, String numero){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE},KEY_NUMERO + " =? AND "+KEY_NUMLIGNE + " =?",
+                new String[]{numero,numligne},null,null,null,null);
+
+        if (cursor.getCount() == 0) {
+
+            return null;
+
+        }
+        else {
+            cursor.moveToFirst();
+            Commandes commandes = new Commandes(0,"","",0,0,"",0);
+            commandes.setId(cursor.getInt(0));
+            commandes.setEan(cursor.getString(1));
+            commandes.setNumero(cursor.getString(2));
+            commandes.setQt(cursor.getInt(3));
+            commandes.setLivre(cursor.getInt(4));
+            commandes.setDesignation(cursor.getString(5));
+            commandes.setNumligne(cursor.getInt(6));
+
+            return commandes;
+        }
+    }
+
+    public Commandes getCommandesFourn(String numligne, String numero){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE},KEY_NUMERO + " =? AND "+KEY_NUMLIGNE + " =?",
+                new String[]{numero,numligne},null,null,null,null);
+
+        if (cursor.getCount() == 0) {
+
+            return null;
+
+        }
+        else {
+            cursor.moveToFirst();
+            Commandes commandes = new Commandes(0,"","",0,0,"",0);
+            commandes.setId(cursor.getInt(0));
+            commandes.setEan(cursor.getString(1));
+            commandes.setNumero(cursor.getString(2));
+            commandes.setQt(cursor.getInt(3));
+            commandes.setLivre(cursor.getInt(4));
+            commandes.setDesignation(cursor.getString(5));
+            commandes.setNumligne(cursor.getInt(6));
+            return commandes;
+        }
+    }
+
+    public void addCommandeClient(Commandes commandes){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_EAN,commandes.getEan());
+        values.put(KEY_NUMERO,commandes.getNumero());
+        values.put(KEY_QT,commandes.getQt());
+        values.put(KEY_LIVRE,commandes.getLivre());
+        values.put(KEY_NUMLIGNE,commandes.getNumligne());
+        values.put(KEY_DESIGNATION,commandes.getDesignation());
+
+        db.insert(TABLE_COMMANDECLIENT,null,values);
+        db.close();
+
+    }
+
+    public void addCommandeFourn(Commandes commandes){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_EAN,commandes.getEan());
+        values.put(KEY_NUMERO,commandes.getNumero());
+        values.put(KEY_QT,commandes.getQt());
+        values.put(KEY_LIVRE,commandes.getLivre());
+        values.put(KEY_NUMLIGNE,commandes.getNumligne());
+        values.put(KEY_DESIGNATION,commandes.getDesignation());
+
+        db.insert(TABLE_COMMANDEFOURN,null,values);
+        db.close();
+
+    }
 
     public void addParametre(Parametres parametre){
         SQLiteDatabase db = this.getWritableDatabase();

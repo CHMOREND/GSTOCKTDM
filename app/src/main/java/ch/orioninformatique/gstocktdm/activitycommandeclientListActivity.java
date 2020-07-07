@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -155,16 +156,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                         for (int i = 0; i < article.length(); i++) {
                             JSONObject a = article.getJSONObject(i);
                             String numclient = a.getString("numclient");
-
                             nomclient = a.getString("nomclient");
-
-/*                            try {
-                                nomclient = new String(a.getString("nomclient").getBytes("UTF-8"),"ISO-8859-1");
-                            } catch (java.io.UnsupportedEncodingException e){
-
-                            };
-*/
-                            //String nomclient = a.getString("nomclient");
                             String ville = a.getString("ville");
                             String numbulletin = a.getString("numbull");
                             String datelivraison = a.getString("datelivraison");
@@ -177,21 +169,29 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                             artic.put("nomclient", numclient+" " +nomclient+" "+ ville);
                             artic.put("numbulletin", numbulletin);
                             artic.put("montantbulletin", montanttotal);
-                            JSONArray ligne = a.getJSONArray("detail");
-                            for (int j = 0; j < ligne.length(); j++) {
-                                JSONObject d = ligne.getJSONObject(j);
-                                String numligne = d.getString("numligne");
-                                String qt = d.getString("qt");
-                                String prix = d.getString("prix");
-                                String numarticle = d.getString("numarticle");
-                                String ean = d.getString("ean");
-                            }
+                            try {
+                                JSONArray ligne = a.getJSONArray("detail");
+                                for (int j = 0; j < ligne.length(); j++) {
+                                    JSONObject d = ligne.getJSONObject(j);
+                                    String numligne = d.getString("numligne");
+                                    String qt = d.getString("qt");
+                                    String prix = d.getString("prix");
+                                    String numarticle = d.getString("numarticle");
+                                    String ean = d.getString("ean");
 
-                                commandeList.add(artic);
+                                    DatabaseHelper db = new DatabaseHelper(activity);
+                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0);
+                                    commandes = db.getCommandesClient(numligne, numbulletin);
+                                    if (commandes == null) {
+                                        commandes = new Commandes(0, ean, numbulletin, Integer.parseInt(qt), 0, numarticle, Integer.parseInt(numligne));
+                                        db.addCommandeClient(commandes);
+                                    }
+                                }
+                            } catch (final JSONException e){
 
-
+                            };
+                            commandeList.add(artic);
                         }
-
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "JSON erreur paramètres : " + e.getMessage());
