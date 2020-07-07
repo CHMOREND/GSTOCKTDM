@@ -125,6 +125,7 @@ public class activitycommandeFournList extends AppCompatActivity {
         protected Void doInBackground(Void... Voids) {
             HttpHandler sh = new HttpHandler();
             jsonStr = sh.makeServiceCall(url);
+            DatabaseHelper db = new DatabaseHelper(activity);
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
@@ -157,7 +158,6 @@ public class activitycommandeFournList extends AppCompatActivity {
                                     String prix = d.getString("prix");
                                     String numarticle = d.getString("numarticle");
                                     String ean = d.getString("ean");
-                                    DatabaseHelper db = new DatabaseHelper(activity);
                                     Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0);
                                     commandes = db.getCommandesClient(numligne, numbulletin);
                                     if (commandes == null) {

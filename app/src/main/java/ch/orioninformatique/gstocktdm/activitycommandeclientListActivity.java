@@ -143,6 +143,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         protected Void doInBackground(Void... Voids) {
             HttpHandler sh = new HttpHandler();
             jsonStr = sh.makeServiceCall(url);
+            DatabaseHelper db = new DatabaseHelper(activity);
             String nomclient = null;
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
@@ -179,7 +180,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     String numarticle = d.getString("numarticle");
                                     String ean = d.getString("ean");
 
-                                    DatabaseHelper db = new DatabaseHelper(activity);
+//                                    DatabaseHelper db = new DatabaseHelper(activity);
                                     Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0);
                                     commandes = db.getCommandesClient(numligne, numbulletin);
                                     if (commandes == null) {
@@ -222,12 +223,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-
-
-                    for (int i = 0; i < commandeList.size(); i++) {
-
-                    }
-
 
         }
 
