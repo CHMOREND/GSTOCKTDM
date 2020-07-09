@@ -101,7 +101,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
     public Commandes getCommandesFourn(String numligne, String numero){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE},KEY_NUMERO + " =? AND "+KEY_NUMLIGNE + " =?",
+        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",
                 new String[]{numero,numligne},null,null,null,null);
 
         if (cursor.getCount() == 0) {

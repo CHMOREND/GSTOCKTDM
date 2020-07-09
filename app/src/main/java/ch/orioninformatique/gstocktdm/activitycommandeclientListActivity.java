@@ -180,8 +180,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     String numarticle = d.getString("numarticle");
                                     String ean = d.getString("ean");
                                     String designation = d.getString("designation");
-
-//                                    DatabaseHelper db = new DatabaseHelper(activity);
                                     Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
                                     commandes = db.getCommandesClient(numligne, numbulletin);
                                     if (commandes == null) {

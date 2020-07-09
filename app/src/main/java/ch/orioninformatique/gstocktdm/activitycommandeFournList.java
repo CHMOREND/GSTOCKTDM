@@ -160,7 +160,7 @@ public class activitycommandeFournList extends AppCompatActivity {
                                     String ean = d.getString("ean");
                                     String designation = d.getString("designation");
                                     Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
-                                    commandes = db.getCommandesClient(numligne, numbulletin);
+                                    commandes = db.getCommandesFourn(numligne, numbulletin);
                                     if (commandes == null) {
                                         commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
                                         db.addCommandeFourn(commandes);
