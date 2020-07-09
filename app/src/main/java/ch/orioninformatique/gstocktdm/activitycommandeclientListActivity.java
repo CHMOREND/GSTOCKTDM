@@ -179,12 +179,13 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     String prix = d.getString("prix");
                                     String numarticle = d.getString("numarticle");
                                     String ean = d.getString("ean");
+                                    String designation = d.getString("designation");
 
 //                                    DatabaseHelper db = new DatabaseHelper(activity);
-                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0);
+                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
                                     commandes = db.getCommandesClient(numligne, numbulletin);
                                     if (commandes == null) {
-                                        commandes = new Commandes(0, ean, numbulletin, Integer.parseInt(qt), 0, numarticle, Integer.parseInt(numligne));
+                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
                                         db.addCommandeClient(commandes);
                                     }
                                 }

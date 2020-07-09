@@ -13,12 +13,14 @@ public class Commandes {
         String ean;
         String numero;
         String designation;
+        String numcommande;
         int qt;
         int numligne;
         int livre;
 
 
-    public Commandes(Integer id, String ean, String numero, Integer qt, Integer livre, String designation, Integer numligne) {
+
+    public Commandes(Integer id, String ean, String numero, Integer qt, Integer livre, String designation, Integer numligne, String numcommande) {
             this.id = id;
             this.ean = ean;
             this.numero = numero;
@@ -26,6 +28,14 @@ public class Commandes {
             this.livre = livre;
             this.designation = designation;
             this.numligne = numligne;
+            this.numcommande = numcommande;
+        }
+        public String getNumcommande() {
+            return numcommande;
+        }
+
+        public void setNumcommande(String numcommande) {
+            this.numcommande = numcommande;
         }
 
         public String getDesignation() {

@@ -12,7 +12,7 @@ import java.util.List;
 public class  DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ScannerDatabase4.db";
+    private static final String DATABASE_NAME = "ScannerDatabase5.db";
     private static final String TABLE_INVENTAIRE = "inventaire";
     private static final String TABLE_COMMANDECLIENT = "commandecl";
     private static final String TABLE_COMMANDEFOURN = "commandefour";
@@ -21,6 +21,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_EAN = "ean";
     private static final String KEY_NUMERO = "numero";
     private static final String KEY_DESIGNATION = "designation";
+    private static final String KEY_COMMANDE = "numcommande";
     private static final String KEY_QT = "qt";
     private static final String KEY_QTSTOCK = "qtstock";
     private static final String KEY_LIVRE = "qtlivre";
@@ -45,12 +46,12 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
         String CREATE_COMMANDECLIENT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDECLIENT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER"+" )";
+                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER,"+ KEY_COMMANDE + " TEXT"+" )";
         db.execSQL(CREATE_COMMANDECLIENT_TABLE);
 
         String CREATE_COMMANDEFOURN_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDEFOURN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER"+" )";
+                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER,"+ KEY_COMMANDE + " TEXT"+" )";
         db.execSQL(CREATE_COMMANDEFOURN_TABLE);
 
     }
@@ -74,7 +75,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     }
     public Commandes getCommandesClient(String numligne, String numero){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE},KEY_NUMERO + " =? AND "+KEY_NUMLIGNE + " =?",
+        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",
                 new String[]{numero,numligne},null,null,null,null);
 
         if (cursor.getCount() == 0) {
@@ -84,7 +85,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         }
         else {
             cursor.moveToFirst();
-            Commandes commandes = new Commandes(0,"","",0,0,"",0);
+            Commandes commandes = new Commandes(0,"","",0,0,"",0,"");
             commandes.setId(cursor.getInt(0));
             commandes.setEan(cursor.getString(1));
             commandes.setNumero(cursor.getString(2));
@@ -92,6 +93,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
             commandes.setLivre(cursor.getInt(4));
             commandes.setDesignation(cursor.getString(5));
             commandes.setNumligne(cursor.getInt(6));
+            commandes.setNumcommande(cursor.getString(7));
 
             return commandes;
         }
@@ -109,7 +111,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         }
         else {
             cursor.moveToFirst();
-            Commandes commandes = new Commandes(0,"","",0,0,"",0);
+            Commandes commandes = new Commandes(0,"","",0,0,"",0,"");
             commandes.setId(cursor.getInt(0));
             commandes.setEan(cursor.getString(1));
             commandes.setNumero(cursor.getString(2));
@@ -117,6 +119,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
             commandes.setLivre(cursor.getInt(4));
             commandes.setDesignation(cursor.getString(5));
             commandes.setNumligne(cursor.getInt(6));
+            commandes.setNumcommande(cursor.getString(7));
             return commandes;
         }
     }
@@ -130,6 +133,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_LIVRE,commandes.getLivre());
         values.put(KEY_NUMLIGNE,commandes.getNumligne());
         values.put(KEY_DESIGNATION,commandes.getDesignation());
+        values.put(KEY_COMMANDE,commandes.getNumcommande());
 
         db.insert(TABLE_COMMANDECLIENT,null,values);
         db.close();
@@ -145,6 +149,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_LIVRE,commandes.getLivre());
         values.put(KEY_NUMLIGNE,commandes.getNumligne());
         values.put(KEY_DESIGNATION,commandes.getDesignation());
+        values.put(KEY_COMMANDE,commandes.getNumcommande());
 
         db.insert(TABLE_COMMANDEFOURN,null,values);
         db.close();
