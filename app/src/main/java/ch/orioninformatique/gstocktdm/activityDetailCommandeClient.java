@@ -16,19 +16,35 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class activityDetailCommandeClient extends AppCompatActivity {
     private FloatingActionButton enregistre;
     private TextView r;
+    private ListView lv;
+    ArrayList<HashMap<String, String>> detailList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_commande_client);
         enregistre =   (FloatingActionButton) findViewById(R.id.fabcommandedetail);
+        detailList = new ArrayList<>();
+        lv = (ListView) findViewById(R.id.listViewDetailClient);
+        ListAdapter adapter = new SimpleAdapter(
+                activityDetailCommandeClient.this,detailList,
+                R.layout.list_item_commandes,new String[]{"numarticle","qtcommande","qtlivre","solde"},
+                new int[]{R.id.numeroarticlecommande,R.id.qtlivre,R.id.qtlivre,R.id.solde} );
+        lv.setAdapter(adapter);
+
         if (savedInstanceState == null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -56,7 +72,19 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                     r.setText(bundle.getString("montantbulletin"));
                 }
             }
+
+
+            for (int i = 0;i < 15;i++) {
+                HashMap<String, String> artic = new HashMap<>();
+                artic.put("numarticle", "Numéro ("+ Integer.toString(i)+")");
+                artic.put("qtcommande", "1");
+                artic.put("qtlivre", "0");
+                artic.put("solde", "1");
+                detailList.add(artic);
+            }
+
         }
+
         enregistre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

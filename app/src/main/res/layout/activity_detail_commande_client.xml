@@ -14,6 +14,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activityDetailCommandeClient"
+
     tools:ignore="MergeRootFrame">
 
     <androidx.core.widget.NestedScrollView
@@ -33,28 +34,29 @@
         android:layout_width="match_parent"
         android:layout_height="103dp"
         android:fitsSystemWindows="true"
+        android:padding="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView
             android:id="@+id/textViewNumero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="Numéro" />
+            android:text="Numéro"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
             android:id="@+id/textViewdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="date" />
+            android:text="date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
             android:id="@+id/textViewClient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="Client" />
+            android:text="Client"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
             android:id="@+id/textViewMontant"
@@ -67,7 +69,9 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="120dp"
+            android:fadingEdge="horizontal|vertical"
             android:fitsSystemWindows="true"
+            android:paddingLeft="10dp"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
