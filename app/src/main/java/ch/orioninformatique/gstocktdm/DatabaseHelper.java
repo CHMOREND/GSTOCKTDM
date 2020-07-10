@@ -73,6 +73,67 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
     }
+
+    public List<Commandes> getCommandesclientdetail(String numero){
+        List<Commandes> commandeList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =?",
+                new String[]{numero},null,null,KEY_NUMLIGNE,null);
+
+        if (cursor.getCount() == 0) {
+
+            return null;
+
+        }
+        else {
+            if (cursor.moveToFirst()) {
+                do {
+                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
+                    commandes.setId(cursor.getInt(0));
+                    commandes.setEan(cursor.getString(1));
+                    commandes.setNumero(cursor.getString(2));
+                    commandes.setQt(cursor.getInt(3));
+                    commandes.setLivre(cursor.getInt(4));
+                    commandes.setDesignation(cursor.getString(5));
+                    commandes.setNumligne(cursor.getInt(6));
+                    commandes.setNumcommande(cursor.getString(7));
+                    commandeList.add(commandes);
+                } while (cursor.moveToNext());
+            };
+            return commandeList;
+        }
+    }
+
+    public List<Commandes> getCommandesfourndetail(String numero){
+        List<Commandes> commandeList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =?",
+                new String[]{numero},null,null,KEY_NUMLIGNE,null);
+
+        if (cursor.getCount() == 0) {
+
+            return null;
+
+        }
+        else {
+            if (cursor.moveToFirst()) {
+                do {
+                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
+                    commandes.setId(cursor.getInt(0));
+                    commandes.setEan(cursor.getString(1));
+                    commandes.setNumero(cursor.getString(2));
+                    commandes.setQt(cursor.getInt(3));
+                    commandes.setLivre(cursor.getInt(4));
+                    commandes.setDesignation(cursor.getString(5));
+                    commandes.setNumligne(cursor.getInt(6));
+                    commandes.setNumcommande(cursor.getString(7));
+                    commandeList.add(commandes);
+                } while (cursor.moveToNext());
+            };
+            return commandeList;
+        }
+    }
+
     public Commandes getCommandesClient(String numligne, String numero){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",

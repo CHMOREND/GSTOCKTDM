@@ -11,6 +11,7 @@ package ch.orioninformatique.gstocktdm;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ButtonBarLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,11 +26,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class activityDetailCommandeClient extends AppCompatActivity {
     private FloatingActionButton enregistre;
     private TextView r;
     private ListView lv;
+    private Activity activity = this;
     ArrayList<HashMap<String, String>> detailList;
 
     @Override
@@ -41,8 +44,8 @@ public class activityDetailCommandeClient extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.listViewDetailClient);
         ListAdapter adapter = new SimpleAdapter(
                 activityDetailCommandeClient.this,detailList,
-                R.layout.list_item_commandes,new String[]{"numarticle","qtcommande","qtlivre","solde"},
-                new int[]{R.id.numeroarticlecommande,R.id.qtlivre,R.id.qtlivre,R.id.solde} );
+                R.layout.list_item_commandes,new String[]{"numarticle","qtcommande","qtlivre","solde","designation","ean"},
+                new int[]{R.id.numeroarticlecommande,R.id.qtcommande,R.id.qtlivre,R.id.solde,R.id.designationarticlecommande,R.id.eanarticlecommande} );
         lv.setAdapter(adapter);
 
         if (savedInstanceState == null) {
@@ -72,14 +75,28 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                     r.setText(bundle.getString("montantbulletin"));
                 }
             }
+            DatabaseHelper db = new DatabaseHelper(activity);
+            List<Commandes> commandeList = db.getCommandesclientdetail(bundle.getString("numbulletin"));
 
 
-            for (int i = 0;i < 15;i++) {
+
+            for (int i = 0;i < commandeList.size();i++) {
                 HashMap<String, String> artic = new HashMap<>();
-                artic.put("numarticle", "Numéro ("+ Integer.toString(i)+")");
-                artic.put("qtcommande", "1");
-                artic.put("qtlivre", "0");
-                artic.put("solde", "1");
+                artic.put("numarticle", commandeList.get(i).getNumero());
+                artic.put("designation", commandeList.get(i).getDesignation());
+                String ean = commandeList.get(i).getEan();
+                if (ean == ""){
+                    artic.put("ean", "Pas de code EAN");
+
+                } else {
+                    artic.put("ean", ean);
+                }
+                Integer qt = commandeList.get(i).qt;
+                artic.put("qtcommande", qt.toString() );
+                Integer livre = commandeList.get(i).livre;
+                artic.put("qtlivre", livre.toString());
+                Integer solde = qt -livre;
+                artic.put("solde", solde.toString());
                 detailList.add(artic);
             }
 
