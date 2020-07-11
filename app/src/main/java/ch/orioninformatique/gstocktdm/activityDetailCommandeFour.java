@@ -179,7 +179,7 @@ public class activityDetailCommandeFour extends AppCompatActivity {
         if (db.enregistreCommandesclientdetail(numCommande,decodedData)){
             Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
             detailList.clear();
-            List<Commandes> commandeList = db.getCommandesclientdetail(numCommande);
+            List<Commandes> commandeList = db.getCommandesfourndetail(numCommande);
             for (int i = 0;i < commandeList.size();i++) {
                 HashMap<String, String> artic = new HashMap<>();
                 artic.put("numarticle", commandeList.get(i).getNumero());

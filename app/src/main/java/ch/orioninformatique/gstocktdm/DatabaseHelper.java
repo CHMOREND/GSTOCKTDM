@@ -88,6 +88,21 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
         }
     }
+    public Boolean enregistreCommandesfourndetail(String numero,String ean) {
+        List<Commandes> commandeList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND "+KEY_EAN + " =?",
+                new String[]{numero,ean}, null, null, KEY_NUMLIGNE, null);
+
+        if (cursor.getCount() == 0) {
+            return false;
+
+        } else {
+
+            return true;
+
+        }
+    }
 
     public List<Commandes> getCommandesclientdetail(String numero){
         List<Commandes> commandeList = new ArrayList<>();
