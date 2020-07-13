@@ -1,10 +1,12 @@
 package ch.orioninformatique.gstocktdm;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +27,10 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_QT = "qt";
     private static final String KEY_QTSTOCK = "qtstock";
     private static final String KEY_LIVRE = "qtlivre";
-    private static final String KEY_NUMLIGNE= "numligne";
+    private static final String KEY_NUMLIGNE = "numligne";
 
-    public DatabaseHelper(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
     }
 
@@ -36,22 +38,22 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_INVENTAIRE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_INVENTAIRE + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_QTSTOCK + " INTEGER"+" )";
+                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_QTSTOCK + " INTEGER" + " )";
         db.execSQL(CREATE_INVENTAIRE_TABLE);
 
         String CREATE_PARAMETRES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_PARAMETRES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + "adresse TEXT," + "port INTEGER"+" )";
+                + "adresse TEXT," + "port INTEGER" + " )";
         db.execSQL(CREATE_PARAMETRES_TABLE);
 
         String CREATE_COMMANDECLIENT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDECLIENT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER,"+ KEY_COMMANDE + " TEXT"+" )";
+                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER," + KEY_COMMANDE + " TEXT" + " )";
         db.execSQL(CREATE_COMMANDECLIENT_TABLE);
 
         String CREATE_COMMANDEFOURN_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDEFOURN + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_EAN + " TEXT," +KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER,"+ KEY_COMMANDE + " TEXT"+" )";
+                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER," + KEY_COMMANDE + " TEXT" + " )";
         db.execSQL(CREATE_COMMANDEFOURN_TABLE);
 
     }
@@ -60,46 +62,102 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public void addInventaire(Inventaire inventaire){
+
+    public void addInventaire(Inventaire inventaire) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_EAN,inventaire.getEan());
-        values.put(KEY_DESIGNATION,inventaire.getDesignation());
-        values.put(KEY_NUMERO,inventaire.getNumero());
-        values.put(KEY_QT,inventaire.getQt());
-        values.put(KEY_QTSTOCK,inventaire.getQtstock());
+        values.put(KEY_EAN, inventaire.getEan());
+        values.put(KEY_DESIGNATION, inventaire.getDesignation());
+        values.put(KEY_NUMERO, inventaire.getNumero());
+        values.put(KEY_QT, inventaire.getQt());
+        values.put(KEY_QTSTOCK, inventaire.getQtstock());
 
-        db.insert(TABLE_INVENTAIRE,null,values);
+        db.insert(TABLE_INVENTAIRE, null, values);
         db.close();
 
     }
-    public Boolean enregistreCommandesclientdetail(String numero,String ean) {
-        List<Commandes> commandeList = new ArrayList<>();
+
+    public boolean enregistreCommandesclientdetail(String numero, String ean) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND "+KEY_EAN + " =?",
-                new String[]{numero,ean}, null, null, KEY_NUMLIGNE, null);
+        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND " + KEY_EAN + " =?",
+                new String[]{numero, ean}, null, null, KEY_NUMLIGNE, null);
 
         if (cursor.getCount() == 0) {
             return false;
-
         } else {
+            if (cursor.moveToFirst()) {
+                do {
 
-            return true;
+                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
+                    commandes.setId(cursor.getInt(0));
+                    commandes.setEan(cursor.getString(1));
+                    commandes.setNumero(cursor.getString(2));
+                    commandes.setQt(cursor.getInt(3));
+                    commandes.setLivre(cursor.getInt(4));
+                    commandes.setDesignation(cursor.getString(5));
+                    commandes.setNumligne(cursor.getInt(6));
+                    commandes.setNumcommande(cursor.getString(7));
+                    if (commandes.getQt() > commandes.getLivre()){
+                        // enregsistre la livraison
+                        SQLiteDatabase db2 = this.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        Integer livre = cursor.getInt(4);
+                        livre = livre + 1;
+                        values.put(KEY_LIVRE,livre);
+                        db2.update(TABLE_COMMANDECLIENT,values,KEY_ID + "=?",
+                                new String[]{String.valueOf(cursor.getInt(0))});
 
+                        cursor.moveToLast();
+                        return true;
+                    }
+                } while (cursor.moveToNext());
+
+            }
+            return false;
         }
+
     }
-    public Boolean enregistreCommandesfourndetail(String numero,String ean) {
-        List<Commandes> commandeList = new ArrayList<>();
+
+
+    public boolean enregistreCommandesfourndetail(String numero,String ean) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND "+KEY_EAN + " =?",
                 new String[]{numero,ean}, null, null, KEY_NUMLIGNE, null);
 
         if (cursor.getCount() == 0) {
             return false;
-
         } else {
+            if (cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    do {
 
-            return true;
+                        Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
+                        commandes.setId(cursor.getInt(0));
+                        commandes.setEan(cursor.getString(1));
+                        commandes.setNumero(cursor.getString(2));
+                        commandes.setQt(cursor.getInt(3));
+                        commandes.setLivre(cursor.getInt(4));
+                        commandes.setDesignation(cursor.getString(5));
+                        commandes.setNumligne(cursor.getInt(6));
+                        commandes.setNumcommande(cursor.getString(7));
+                        if (commandes.getQt() > commandes.getLivre()){
+                            // enregsistre la livraison
+                            SQLiteDatabase db2 = this.getWritableDatabase();
+                            ContentValues values = new ContentValues();
+                            Integer livre = cursor.getInt(4);
+                            livre = livre + 1;
+                            values.put(KEY_LIVRE,livre);
+                            db2.update(TABLE_COMMANDEFOURN,values,KEY_ID + "=?",
+                                    new String[]{String.valueOf(cursor.getInt(0))});
+
+                            cursor.moveToLast();
+                            return true;
+                        }
+                    } while (cursor.moveToNext());
+                    return false;
+                }
+            }
+            return false;
 
         }
     }
@@ -324,6 +382,28 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return inventaireList;
+    }
+    public int updateeancommandeclient(Commandes commande){
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (commande.getEan() != null){
+            ContentValues values = new ContentValues();
+            values.put(KEY_EAN, commande.getEan());
+            return db.update(TABLE_COMMANDECLIENT, values, KEY_ID + "=?",
+                    new String[]{String.valueOf(commande.getId())});
+        }
+        return 0;
+
+    }
+    public int updateeancommandefourn(Commandes commande){
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (commande.getEan() != null){
+            ContentValues values = new ContentValues();
+            values.put(KEY_EAN, commande.getEan());
+            return db.update(TABLE_COMMANDEFOURN, values, KEY_ID + "=?",
+                    new String[]{String.valueOf(commande.getId())});
+        }
+        return 0;
+
     }
     public int updateInventaire(Inventaire inventaire){
         SQLiteDatabase db = this.getWritableDatabase();

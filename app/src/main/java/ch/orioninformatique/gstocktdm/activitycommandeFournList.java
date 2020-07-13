@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -164,6 +166,11 @@ public class activitycommandeFournList extends AppCompatActivity {
                                     if (commandes == null) {
                                         commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
                                         db.addCommandeFourn(commandes);
+                                    } else  {
+                                        commandes.setEan(ean);
+                                        DatabaseHelper db2 = new DatabaseHelper(activity);
+                                        db2.updateeancommandefourn(commandes);
+
                                     }
                                 }
                             } catch (final JSONException e){

@@ -185,6 +185,10 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     if (commandes == null) {
                                         commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
                                         db.addCommandeClient(commandes);
+                                    }else  {
+                                        DatabaseHelper db2 = new DatabaseHelper(activity);
+                                        commandes.setEan(ean);
+                                        db2.updateeancommandeclient(commandes);
                                     }
                                 }
                             } catch (final JSONException e){

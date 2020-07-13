@@ -176,10 +176,11 @@ public class activityDetailCommandeFour extends AppCompatActivity {
         }
         // recherche du code EAN dans la commande et enregistre la sortie
         DatabaseHelper db = new DatabaseHelper(activity);
-        if (db.enregistreCommandesclientdetail(numCommande,decodedData)){
+        if (db.enregistreCommandesfourndetail(numCommande,decodedData)) {
             Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
             detailList.clear();
             List<Commandes> commandeList = db.getCommandesfourndetail(numCommande);
+
             for (int i = 0;i < commandeList.size();i++) {
                 HashMap<String, String> artic = new HashMap<>();
                 artic.put("numarticle", commandeList.get(i).getNumero());
@@ -187,7 +188,6 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 String ean = commandeList.get(i).getEan();
                 if (Objects.equals(ean, "")){
                     artic.put("ean", "Pas de EAN");
-
 
                 } else {
                     artic.put("ean", ean);
@@ -197,12 +197,11 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 Integer livre = commandeList.get(i).livre;
                 artic.put("qtlivre", livre.toString());
                 Integer solde = qt -livre;
-
                 artic.put("solde", solde.toString());
                 detailList.add(artic);
             }
-            lv.invalidateViews();
 
+            lv.invalidateViews();
         } else {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
