@@ -136,7 +136,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                 mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // ici l'envoi au serveur de la commande et effacement de la commande dans le scanner
+
                         List<Commandes> commandeList = db.getCommandesclientdetail(numCommande);
                         Integer livre = 0;
                         for (int i = 0;i < commandeList.size();i++) {
@@ -145,7 +145,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                             }
                         }
                         if (livre > 0){
-
+                            // ici l'envoi au serveur de la commande et effacement de la commande dans le scanner
 
                             Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeclientListActivity.class);
                             startActivity(inventaireAcitivty);
@@ -153,9 +153,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                         } else{
                             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
-
                             Toast.makeText(activity, "La commande n° " + numCommande + " n'a pas d'article traité !!", Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 });
