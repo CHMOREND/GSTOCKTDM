@@ -57,6 +57,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
     private String jsonStr;
     private SearchView searchView;
     ArrayList<HashMap<String, String>> commandeList;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_activitycommandeclient_list);
 
+        db = new DatabaseHelper(activity);
 
         commandeList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.listViewcl);
@@ -77,9 +79,9 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
 
         lv.setAdapter(adapter);
 
-        DatabaseHelper dbp = new DatabaseHelper(activity);
+        //DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
-        parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
+        parametres = db.getParametre(1);  // lecture des paramètres de connexion
         if (parametres == null) {
             Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
             startActivity(parametreAcitivty);
@@ -143,7 +145,6 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
         protected Void doInBackground(Void... Voids) {
             HttpHandler sh = new HttpHandler();
             jsonStr = sh.makeServiceCall(url);
-            DatabaseHelper db = new DatabaseHelper(activity);
             String nomclient = null;
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
@@ -186,9 +187,8 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                         commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
                                         db.addCommandeClient(commandes);
                                     }else  {
-                                        DatabaseHelper db2 = new DatabaseHelper(activity);
                                         commandes.setEan(ean);
-                                        db2.updateeancommandeclient(commandes);
+                                        db.updateeancommandeclient(commandes);
                                     }
                                 }
                             } catch (final JSONException e){

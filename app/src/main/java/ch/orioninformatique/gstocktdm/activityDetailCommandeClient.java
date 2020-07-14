@@ -53,6 +53,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
     private String decodedData;
     private String numCommande;
     private ListAdapter adapter;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
         registerReceiver(myBroadcastReceiver, filter);
+        db = new DatabaseHelper(activity);
 
         adapter = new SimpleAdapter(
                 activityDetailCommandeClient.this,detailList,
@@ -100,7 +102,6 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                     r.setText(bundle.getString("montantbulletin"));
                 }
             }
-            DatabaseHelper db = new DatabaseHelper(activity);
             List<Commandes> commandeList = db.getCommandesclientdetail(bundle.getString("numbulletin"));
             for (int i = 0;i < commandeList.size();i++) {
                 HashMap<String, String> artic = new HashMap<>();
@@ -136,9 +137,26 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // ici l'envoi au serveur de la commande et effacement de la commande dans le scanner
-                        Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeclientListActivity.class);
-                        startActivity(inventaireAcitivty);
-                        finish();
+                        List<Commandes> commandeList = db.getCommandesclientdetail(numCommande);
+                        Integer livre = 0;
+                        for (int i = 0;i < commandeList.size();i++) {
+                            if (livre == 0){
+                                livre =  commandeList.get(i).getLivre();
+                            }
+                        }
+                        if (livre > 0){
+
+
+                            Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeclientListActivity.class);
+                            startActivity(inventaireAcitivty);
+                            finish();
+                        } else{
+                            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
+
+                            Toast.makeText(activity, "La commande n° " + numCommande + " n'a pas d'article traité !!", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 });
                 mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
@@ -186,7 +204,6 @@ public class activityDetailCommandeClient extends AppCompatActivity {
             decodedData = "0" + decodedData;
         }
         // recherche du code EAN dans la commande et enregistre la sortie
-        DatabaseHelper db = new DatabaseHelper(activity);
         if ( db.enregistreCommandesclientdetail(numCommande,decodedData)) {
              Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
             detailList.clear();

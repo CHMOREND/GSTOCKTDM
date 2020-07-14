@@ -15,6 +15,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PostProcessor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import retrofit2.http.POST;
+
 public class activitycommandeFournList extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
     private ListView lv;
@@ -42,13 +45,14 @@ public class activitycommandeFournList extends AppCompatActivity {
     private ProgressDialog pDialog;
     private String jsonStr;
     private SearchView searchView;
+    private DatabaseHelper db;
     ArrayList<HashMap<String, String>> commandeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activitycommande_fourn_list);
-
+        db = new DatabaseHelper(activity);
         commandeList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.listViewFou);
         searchView = (SearchView) findViewById(R.id.searchViewFou);
@@ -61,9 +65,8 @@ public class activitycommandeFournList extends AppCompatActivity {
 
         lv.setAdapter(adapter);
 
-        DatabaseHelper dbp = new DatabaseHelper(activity);
         Parametres parametres = new Parametres(0, "", 0);
-        parametres = dbp.getParametre(1);  // lecture des paramètres de connexion
+        parametres = db.getParametre(1);  // lecture des paramètres de connexion
         if (parametres == null) {
             Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
             startActivity(parametreAcitivty);
@@ -71,8 +74,6 @@ public class activitycommandeFournList extends AppCompatActivity {
         } else {
             url = "http://" + parametres.getAdresse() + ':' + parametres.getPort() + "/commandefourn";
             new activitycommandeFournList.Getcommandes().execute();
-
-
         }
 
 
@@ -127,7 +128,7 @@ public class activitycommandeFournList extends AppCompatActivity {
         protected Void doInBackground(Void... Voids) {
             HttpHandler sh = new HttpHandler();
             jsonStr = sh.makeServiceCall(url);
-            DatabaseHelper db = new DatabaseHelper(activity);
+            //DatabaseHelper db = new DatabaseHelper(activity);
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
@@ -168,8 +169,7 @@ public class activitycommandeFournList extends AppCompatActivity {
                                         db.addCommandeFourn(commandes);
                                     } else  {
                                         commandes.setEan(ean);
-                                        DatabaseHelper db2 = new DatabaseHelper(activity);
-                                        db2.updateeancommandefourn(commandes);
+                                        db.updateeancommandefourn(commandes);
 
                                     }
                                 }

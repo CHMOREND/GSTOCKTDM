@@ -79,6 +79,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean enregistreCommandesclientdetail(String numero, String ean) {
         SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db2 = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND " + KEY_EAN + " =?",
                 new String[]{numero, ean}, null, null, KEY_NUMLIGNE, null);
 
@@ -99,7 +100,6 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
                     commandes.setNumcommande(cursor.getString(7));
                     if (commandes.getQt() > commandes.getLivre()){
                         // enregsistre la livraison
-                        SQLiteDatabase db2 = this.getWritableDatabase();
                         ContentValues values = new ContentValues();
                         Integer livre = cursor.getInt(4);
                         livre = livre + 1;
@@ -121,6 +121,8 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean enregistreCommandesfourndetail(String numero,String ean) {
         SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db2 = this.getWritableDatabase();
+
         Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND "+KEY_EAN + " =?",
                 new String[]{numero,ean}, null, null, KEY_NUMLIGNE, null);
 
@@ -142,7 +144,6 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
                         commandes.setNumcommande(cursor.getString(7));
                         if (commandes.getQt() > commandes.getLivre()){
                             // enregsistre la livraison
-                            SQLiteDatabase db2 = this.getWritableDatabase();
                             ContentValues values = new ContentValues();
                             Integer livre = cursor.getInt(4);
                             livre = livre + 1;
