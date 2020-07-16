@@ -14,7 +14,7 @@ import java.util.List;
 public class  DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ScannerDatabase5.db";
+    private static final String DATABASE_NAME = "ScannerDatabase8.db";
     private static final String TABLE_INVENTAIRE = "inventaire";
     private static final String TABLE_COMMANDECLIENT = "commandecl";
     private static final String TABLE_COMMANDEFOURN = "commandefour";
@@ -430,12 +430,12 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     }
     public void deleteCommandeClient(String numcommande){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_COMMANDECLIENT, String.valueOf(KEY_COMMANDE == numcommande),null);
+        db.delete(TABLE_COMMANDECLIENT, KEY_COMMANDE +"=?",  new String[]{numcommande});
         db.close();
     }
     public void deleteCommandeFourn(String numcommande){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_COMMANDEFOURN, String.valueOf(KEY_COMMANDE == numcommande),null);
+        db.delete(TABLE_COMMANDEFOURN, KEY_COMMANDE +"=?",new String[]{numcommande});
         db.close();
     }
 

@@ -184,9 +184,11 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
                                     commandes = db.getCommandesClient(numligne, numbulletin);
                                     if (commandes == null) {
+                                        ean = ean.replaceAll("\\s","");
                                         commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
                                         db.addCommandeClient(commandes);
                                     }else  {
+                                        ean = ean.replaceAll("\\s","");
                                         commandes.setEan(ean);
                                         db.updateeancommandeclient(commandes);
                                     }
