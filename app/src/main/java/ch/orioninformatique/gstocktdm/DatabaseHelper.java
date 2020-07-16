@@ -428,6 +428,17 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_INVENTAIRE,null,null);
         db.close();
     }
+    public void deleteCommandeClient(String numcommande){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_COMMANDECLIENT, String.valueOf(KEY_COMMANDE == numcommande),null);
+        db.close();
+    }
+    public void deleteCommandeFourn(String numcommande){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_COMMANDEFOURN, String.valueOf(KEY_COMMANDE == numcommande),null);
+        db.close();
+    }
+
     public int GetInventaireCount(){
         String countQuery = "SELECT id FROM "+TABLE_INVENTAIRE;
         SQLiteDatabase db = this.getReadableDatabase();

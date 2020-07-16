@@ -58,6 +58,7 @@ public class activityDetailCommandeFour extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
     private String url="";
     private String result="";
+    private Boolean ok=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,7 +276,11 @@ public class activityDetailCommandeFour extends AppCompatActivity {
             String jsonStr = sh.makeServiceCall(url);
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
-
+                if (jsonStr.contains("True")) {
+                    ok = true;
+                } else {
+                    ok = false;
+                }
 
             } else {
                 Log.e(TAG, " pas de réponse du serveur : ");
@@ -297,10 +302,19 @@ public class activityDetailCommandeFour extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-            Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
-            startActivity(inventaireAcitivty);
-            finish();
+            if (ok){
+                // efface la commande
+                db.deleteCommandeFourn(numCommande);
 
+                Toast.makeText(activity, "La commande " + numCommande +" a bien été enregistré !!!", Toast.LENGTH_SHORT).show();
+
+                Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
+                startActivity(inventaireAcitivty);
+                finish();
+            } else {
+                Toast.makeText(activity, "La commande " + numCommande +" n'a pas été enregistré !!!", Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 
