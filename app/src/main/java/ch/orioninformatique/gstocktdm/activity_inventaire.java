@@ -71,8 +71,8 @@ public class activity_inventaire extends AppCompatActivity {
     private Integer idStock = 0;
     private Boolean allerRechercheStock = false;
     private Boolean pasDeReponseDuServeur = false;
-
     private String decodedData;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -299,8 +299,6 @@ public class activity_inventaire extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // show loading dialog
-  //          pDialog = new ProgressDialog(activity_inventaire.this);
             pDialog.setMessage("Lecture ...");
             pDialog.setCancelable(false);
             pDialog.show();

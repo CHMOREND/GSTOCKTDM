@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +20,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -30,6 +33,9 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.symbol.emdk.EMDKManager;
 import com.symbol.emdk.scanandpair.ScanAndPairManager;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -42,12 +48,16 @@ public class activityDetailCommandeFour extends AppCompatActivity {
     private TextView r;
     private Activity activity = this;
     private ListView lv;
+    private ProgressDialog pDialog;
     ArrayList<HashMap<String, String>> detailList;
     private EMDKManager emdkManager;
     private ScanAndPairManager scanAndPairManager;
     private String decodedData;
     private String numCommande;
     private DatabaseHelper db;
+    private String TAG = MainActivity.class.getSimpleName();
+    private String url="";
+    private String result="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +143,34 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                         }
                         if (livre > 0){
                             // ici l'envoi au serveur de la commande et effacement de la commande dans le scanner
+                            Parametres parametres = new Parametres(0, "", 0);
+                            parametres = db.getParametre(1);  // lecture des paramètres de connexion
+                            if (parametres == null) {
+                                Intent parametreAcitivty = new Intent(getApplicationContext(), activity_Parametre.class);
+                                startActivity(parametreAcitivty);
+                                finish();
+                            } else {
+                                url = "http://" + parametres.getAdresse() + ':' + parametres.getPort();
+                            }
+                            url = url+"/enregistrecommandefourn";
+                            JSONArray jsonArray = new JSONArray();
+                            JSONObject jsonObject = new JSONObject();
+                            for (int i = 0;i < commandeList.size();i++) {
+                                try {
+                                    Integer solde = commandeList.get(i).getQt() - commandeList.get(i).getLivre();
+                                    jsonArray.put(new JSONObject().put("numcommande", commandeList.get(i).getNumcommande())
+                                            .put("ligne", commandeList.get(i).getNumligne())
+                                            .put("livre", commandeList.get(i).getLivre())
+                                            .put("solde", solde));
+                                    jsonObject.put("commande",jsonArray);
+                                } catch (Exception e) {
 
-                            Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
-                            startActivity(inventaireAcitivty);
-                            finish();
+                                };
+                            }
+                            result = jsonObject.toString();
+                            new  activityDetailCommandeFour.SetCommande().execute();
+
+
                         } else{
                             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
@@ -222,8 +256,54 @@ public class activityDetailCommandeFour extends AppCompatActivity {
             Toast.makeText(activity, "l'article avec le code EAN "+decodedData+ " n'a pas été trouvé dans la commande ou il es déjà enregistré", Toast.LENGTH_SHORT).show();
         }
 
-
     }
+    private class SetCommande extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // show loading dialog
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Enregistre la commande ...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... Voids) {
+            HttpHandler sh = new HttpHandler();
+            url = url+"?commandes="+result;
+            String jsonStr = sh.makeServiceCall(url);
+            Log.e(TAG, "Réponse de url : " + jsonStr);
+            if (jsonStr != null) {
+
+
+            } else {
+                Log.e(TAG, " pas de réponse du serveur : ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, "Pas de réponse du serveur.", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
+            startActivity(inventaireAcitivty);
+            finish();
+
+        }
+    }
+
     @Override
     public void onBackPressed() {
         Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
