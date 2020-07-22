@@ -312,6 +312,8 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 startActivity(inventaireAcitivty);
                 finish();
             } else {
+                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
                 Toast.makeText(activity, "La commande " + numCommande +" n'a pas été enregistré !!!", Toast.LENGTH_SHORT).show();
 
             }
