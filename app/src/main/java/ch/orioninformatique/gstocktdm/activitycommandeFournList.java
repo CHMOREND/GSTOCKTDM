@@ -119,7 +119,7 @@ public class activitycommandeFournList extends AppCompatActivity {
             super.onPreExecute();
             // show loading dialog
             pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Lecture des commandes clients ...");
+            pDialog.setMessage("Lecture des commandes fournisseurs ...");
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -132,7 +132,7 @@ public class activitycommandeFournList extends AppCompatActivity {
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
-                    if (jsonStr.contains("ORION INFORMATIQUE SA")) {
+                    if (jsonStr.contains("ORION INFORMATIQUE SA") || jsonStr.contains("false")) {
 
                     } else {
 

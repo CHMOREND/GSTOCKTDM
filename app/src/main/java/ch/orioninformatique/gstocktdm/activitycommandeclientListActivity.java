@@ -149,7 +149,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
-                    if (jsonStr.contains("ORION INFORMATIQUE SA")) {
+                    if (jsonStr.contains("ORION INFORMATIQUE SA") || jsonStr.contains("false")) {
 
                     } else {
 
