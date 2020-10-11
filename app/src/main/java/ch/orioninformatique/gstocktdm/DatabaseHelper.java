@@ -400,6 +400,7 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         if (commande.getEan() != null){
             ContentValues values = new ContentValues();
             values.put(KEY_EAN, commande.getEan());
+            values.put(KEY_LIVRE, commande.getLivre());
             return db.update(TABLE_COMMANDEFOURN, values, KEY_ID + "=?",
                     new String[]{String.valueOf(commande.getId())});
         }
