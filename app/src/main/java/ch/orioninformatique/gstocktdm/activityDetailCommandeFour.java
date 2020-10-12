@@ -119,8 +119,10 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 Integer qt = commandeList.get(i).qt;
                 artic.put("qtcommande", qt.toString() );
                 Integer livre = commandeList.get(i).livre;
-                artic.put("qtlivre", livre.toString());
-                Integer solde = qt -livre;
+                Integer dejalivre = commandeList.get(i).dejalivre;
+                Integer totallivraison = livre + dejalivre;
+                artic.put("qtlivre", totallivraison.toString());
+                Integer solde = qt -totallivraison;
                 artic.put("solde", solde.toString());
                 detailList.add(artic);
             }
@@ -243,8 +245,10 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 Integer qt = commandeList.get(i).qt;
                 artic.put("qtcommande", qt.toString() );
                 Integer livre = commandeList.get(i).livre;
-                artic.put("qtlivre", livre.toString());
-                Integer solde = qt -livre;
+                Integer dejalivre = commandeList.get(i).dejalivre;
+                Integer totallivraison = livre + dejalivre;
+                artic.put("qtlivre", totallivraison.toString());
+                Integer solde = qt -totallivraison;
                 artic.put("solde", solde.toString());
                 detailList.add(artic);
             }

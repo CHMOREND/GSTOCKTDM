@@ -17,10 +17,11 @@ public class Commandes {
         int qt;
         int numligne;
         int livre;
+        int dejalivre;
 
 
 
-    public Commandes(Integer id, String ean, String numero, Integer qt, Integer livre, String designation, Integer numligne, String numcommande) {
+    public Commandes(Integer id, String ean, String numero, Integer qt, Integer livre, String designation, Integer numligne, String numcommande,Integer dejalivre) {
             this.id = id;
             this.ean = ean;
             this.numero = numero;
@@ -29,12 +30,21 @@ public class Commandes {
             this.designation = designation;
             this.numligne = numligne;
             this.numcommande = numcommande;
+            this.dejalivre = dejalivre;
         }
         public String getNumcommande() {
             return numcommande;
         }
 
-        public void setNumcommande(String numcommande) {
+    public int getDejalivre() {
+        return dejalivre;
+    }
+
+    public void setDejalivre(int dejalivre) {
+        this.dejalivre = dejalivre;
+    }
+
+    public void setNumcommande(String numcommande) {
             this.numcommande = numcommande;
         }
 

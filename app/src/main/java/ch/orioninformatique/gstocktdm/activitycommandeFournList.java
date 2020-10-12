@@ -163,16 +163,16 @@ public class activitycommandeFournList extends AppCompatActivity {
                                     String numarticle = d.getString("numarticle");
                                     String ean = d.getString("ean");
                                     String designation = d.getString("designation");
-                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
+                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"",0);
                                     commandes = db.getCommandesFourn(numligne, numbulletin);
                                     if (commandes == null) {
                                         ean = ean.replaceAll("\\s","");
-                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), Integer.parseInt(livre), designation, Integer.parseInt(numligne),numbulletin);
+                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin,Integer.parseInt(livre));
                                         db.addCommandeFourn(commandes);
                                     } else  {
                                         ean = ean.replaceAll("\\s","");
                                         commandes.setEan(ean);
-                                        commandes.setLivre(Integer.parseInt(livre));
+                                        commandes.setDejalivre(Integer.parseInt(livre));
                                         db.updateeancommandefourn(commandes);
 
                                     }
