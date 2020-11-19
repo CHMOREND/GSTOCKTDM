@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -395,6 +397,11 @@ public class activity_inventaire extends AppCompatActivity {
             } else
             {
                 if (pasDeReponseDuServeur) {
+
+                     ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
+                    pasDeReponseDuServeur = false;
+
 
                 } else {
                     DatabaseHelper db = new DatabaseHelper(activity);

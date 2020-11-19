@@ -1,0 +1,329 @@
+Index: app/src/main/java/ch/orioninformatique/gstocktdm/DatabaseHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ch/orioninformatique/gstocktdm/DatabaseHelper.java	(revision 6505198bc9124a87913433d02cf2a6652b701021)
++++ app/src/main/java/ch/orioninformatique/gstocktdm/DatabaseHelper.java	(date 1602494613139)
+@@ -14,7 +14,7 @@
+ public class  DatabaseHelper extends SQLiteOpenHelper {
+ 
+     private static final int DATABASE_VERSION = 1;
+-    private static final String DATABASE_NAME = "ScannerDatabase9.db";
++    private static final String DATABASE_NAME = "ScannerDatabase12.db";
+     private static final String TABLE_INVENTAIRE = "inventaire";
+     private static final String TABLE_COMMANDECLIENT = "commandecl";
+     private static final String TABLE_COMMANDEFOURN = "commandefour";
+@@ -27,6 +27,7 @@
+     private static final String KEY_QT = "qt";
+     private static final String KEY_QTSTOCK = "qtstock";
+     private static final String KEY_LIVRE = "qtlivre";
++    private static final String KEY_DEJALIVRE = "livre";
+     private static final String KEY_NUMLIGNE = "numligne";
+ 
+     public DatabaseHelper(Context context) {
+@@ -48,12 +49,12 @@
+ 
+         String CREATE_COMMANDECLIENT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDECLIENT + "("
+                 + KEY_ID + " INTEGER PRIMARY KEY,"
+-                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER," + KEY_COMMANDE + " TEXT" + " )";
++                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER,"  + KEY_COMMANDE + " TEXT,"+ KEY_DEJALIVRE + " INTEGER" + " )";
+         db.execSQL(CREATE_COMMANDECLIENT_TABLE);
+ 
+         String CREATE_COMMANDEFOURN_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COMMANDEFOURN + "("
+                 + KEY_ID + " INTEGER PRIMARY KEY,"
+-                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER," + KEY_COMMANDE + " TEXT" + " )";
++                + KEY_EAN + " TEXT," + KEY_NUMERO + " TEXT," + KEY_DESIGNATION + " TEXT," + KEY_QT + " INTEGER," + KEY_NUMLIGNE + " INTEGER," + KEY_LIVRE + " INTEGER,"  + KEY_COMMANDE + " TEXT," + KEY_DEJALIVRE + " INTEGER" + " )";
+         db.execSQL(CREATE_COMMANDEFOURN_TABLE);
+ 
+     }
+@@ -89,7 +90,7 @@
+             if (cursor.moveToFirst()) {
+                 do {
+ 
+-                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
++                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "",0);
+                     commandes.setId(cursor.getInt(0));
+                     commandes.setEan(cursor.getString(1));
+                     commandes.setNumero(cursor.getString(2));
+@@ -98,7 +99,7 @@
+                     commandes.setDesignation(cursor.getString(5));
+                     commandes.setNumligne(cursor.getInt(6));
+                     commandes.setNumcommande(cursor.getString(7));
+-                    if (commandes.getQt() > commandes.getLivre()){
++                    if (commandes.getQt() > (commandes.getLivre() +commandes.getDejalivre())){
+                         // enregsistre la livraison
+                         ContentValues values = new ContentValues();
+                         Integer livre = cursor.getInt(4);
+@@ -123,7 +124,7 @@
+         SQLiteDatabase db = this.getReadableDatabase();
+         SQLiteDatabase db2 = this.getWritableDatabase();
+ 
+-        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND "+KEY_EAN + " =?",
++        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE,KEY_DEJALIVRE}, KEY_COMMANDE + " =? AND "+KEY_EAN + " =?",
+                 new String[]{numero,ean}, null, null, KEY_NUMLIGNE, null);
+ 
+         if (cursor.getCount() == 0) {
+@@ -133,7 +134,7 @@
+                 if (cursor.moveToFirst()) {
+                     do {
+ 
+-                        Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
++                        Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "",0);
+                         commandes.setId(cursor.getInt(0));
+                         commandes.setEan(cursor.getString(1));
+                         commandes.setNumero(cursor.getString(2));
+@@ -142,7 +143,8 @@
+                         commandes.setDesignation(cursor.getString(5));
+                         commandes.setNumligne(cursor.getInt(6));
+                         commandes.setNumcommande(cursor.getString(7));
+-                        if (commandes.getQt() > commandes.getLivre()){
++                        commandes.setDejalivre(cursor.getInt(8));
++                        if (commandes.getQt() > (commandes.getLivre()+ commandes.getDejalivre())){
+                             // enregsistre la livraison
+                             ContentValues values = new ContentValues();
+                             Integer livre = cursor.getInt(4);
+@@ -166,7 +168,7 @@
+     public List<Commandes> getCommandesclientdetail(String numero){
+         List<Commandes> commandeList = new ArrayList<>();
+         SQLiteDatabase db = this.getReadableDatabase();
+-        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =?",
++        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE,KEY_DEJALIVRE},KEY_COMMANDE + " =?",
+                 new String[]{numero},null,null,KEY_NUMLIGNE,null);
+ 
+         if (cursor.getCount() == 0) {
+@@ -177,7 +179,7 @@
+         else {
+             if (cursor.moveToFirst()) {
+                 do {
+-                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
++                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "",0);
+                     commandes.setId(cursor.getInt(0));
+                     commandes.setEan(cursor.getString(1));
+                     commandes.setNumero(cursor.getString(2));
+@@ -186,6 +188,7 @@
+                     commandes.setDesignation(cursor.getString(5));
+                     commandes.setNumligne(cursor.getInt(6));
+                     commandes.setNumcommande(cursor.getString(7));
++                    commandes.setDejalivre(cursor.getInt(8));
+                     commandeList.add(commandes);
+                 } while (cursor.moveToNext());
+             };
+@@ -196,7 +199,7 @@
+     public List<Commandes> getCommandesfourndetail(String numero){
+         List<Commandes> commandeList = new ArrayList<>();
+         SQLiteDatabase db = this.getReadableDatabase();
+-        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =?",
++        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE,KEY_DEJALIVRE},KEY_COMMANDE + " =?",
+                 new String[]{numero},null,null,KEY_NUMLIGNE,null);
+ 
+         if (cursor.getCount() == 0) {
+@@ -207,7 +210,7 @@
+         else {
+             if (cursor.moveToFirst()) {
+                 do {
+-                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "");
++                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "",0);
+                     commandes.setId(cursor.getInt(0));
+                     commandes.setEan(cursor.getString(1));
+                     commandes.setNumero(cursor.getString(2));
+@@ -216,6 +219,7 @@
+                     commandes.setDesignation(cursor.getString(5));
+                     commandes.setNumligne(cursor.getInt(6));
+                     commandes.setNumcommande(cursor.getString(7));
++                    commandes.setDejalivre(cursor.getInt(8));
+                     commandeList.add(commandes);
+                 } while (cursor.moveToNext());
+             };
+@@ -225,7 +229,7 @@
+ 
+     public Commandes getCommandesClient(String numligne, String numero){
+         SQLiteDatabase db = this.getReadableDatabase();
+-        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",
++        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE,KEY_DEJALIVRE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",
+                 new String[]{numero,numligne},null,null,null,null);
+ 
+         if (cursor.getCount() == 0) {
+@@ -235,7 +239,7 @@
+         }
+         else {
+             cursor.moveToFirst();
+-            Commandes commandes = new Commandes(0,"","",0,0,"",0,"");
++            Commandes commandes = new Commandes(0,"","",0,0,"",0,"",0);
+             commandes.setId(cursor.getInt(0));
+             commandes.setEan(cursor.getString(1));
+             commandes.setNumero(cursor.getString(2));
+@@ -244,6 +248,7 @@
+             commandes.setDesignation(cursor.getString(5));
+             commandes.setNumligne(cursor.getInt(6));
+             commandes.setNumcommande(cursor.getString(7));
++            commandes.setDejalivre(cursor.getInt(8));
+ 
+             return commandes;
+         }
+@@ -251,7 +256,7 @@
+ 
+     public Commandes getCommandesFourn(String numligne, String numero){
+         SQLiteDatabase db = this.getReadableDatabase();
+-        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",
++        Cursor cursor = db.query(TABLE_COMMANDEFOURN, new String[]{KEY_ID,KEY_EAN,KEY_NUMERO,KEY_QT,KEY_LIVRE,KEY_DESIGNATION,KEY_NUMLIGNE,KEY_COMMANDE,KEY_DEJALIVRE},KEY_COMMANDE + " =? AND "+KEY_NUMLIGNE + " =?",
+                 new String[]{numero,numligne},null,null,null,null);
+ 
+         if (cursor.getCount() == 0) {
+@@ -261,7 +266,7 @@
+         }
+         else {
+             cursor.moveToFirst();
+-            Commandes commandes = new Commandes(0,"","",0,0,"",0,"");
++            Commandes commandes = new Commandes(0,"","",0,0,"",0,"",0);
+             commandes.setId(cursor.getInt(0));
+             commandes.setEan(cursor.getString(1));
+             commandes.setNumero(cursor.getString(2));
+@@ -270,6 +275,7 @@
+             commandes.setDesignation(cursor.getString(5));
+             commandes.setNumligne(cursor.getInt(6));
+             commandes.setNumcommande(cursor.getString(7));
++            commandes.setDejalivre(cursor.getInt(8));
+             return commandes;
+         }
+     }
+@@ -284,6 +290,7 @@
+         values.put(KEY_NUMLIGNE,commandes.getNumligne());
+         values.put(KEY_DESIGNATION,commandes.getDesignation());
+         values.put(KEY_COMMANDE,commandes.getNumcommande());
++        values.put(KEY_DEJALIVRE,commandes.getDejalivre());
+ 
+         db.insert(TABLE_COMMANDECLIENT,null,values);
+         db.close();
+@@ -300,6 +307,7 @@
+         values.put(KEY_NUMLIGNE,commandes.getNumligne());
+         values.put(KEY_DESIGNATION,commandes.getDesignation());
+         values.put(KEY_COMMANDE,commandes.getNumcommande());
++        values.put(KEY_DEJALIVRE,commandes.getDejalivre());
+ 
+         db.insert(TABLE_COMMANDEFOURN,null,values);
+         db.close();
+Index: app/src/main/java/ch/orioninformatique/gstocktdm/Commandes.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ch/orioninformatique/gstocktdm/Commandes.java	(revision 6505198bc9124a87913433d02cf2a6652b701021)
++++ app/src/main/java/ch/orioninformatique/gstocktdm/Commandes.java	(date 1602489795669)
+@@ -17,10 +17,11 @@
+         int qt;
+         int numligne;
+         int livre;
++        int dejalivre;
+ 
+ 
+ 
+-    public Commandes(Integer id, String ean, String numero, Integer qt, Integer livre, String designation, Integer numligne, String numcommande) {
++    public Commandes(Integer id, String ean, String numero, Integer qt, Integer livre, String designation, Integer numligne, String numcommande,Integer dejalivre) {
+             this.id = id;
+             this.ean = ean;
+             this.numero = numero;
+@@ -29,12 +30,21 @@
+             this.designation = designation;
+             this.numligne = numligne;
+             this.numcommande = numcommande;
++            this.dejalivre = dejalivre;
+         }
+         public String getNumcommande() {
+             return numcommande;
+         }
+ 
+-        public void setNumcommande(String numcommande) {
++    public int getDejalivre() {
++        return dejalivre;
++    }
++
++    public void setDejalivre(int dejalivre) {
++        this.dejalivre = dejalivre;
++    }
++
++    public void setNumcommande(String numcommande) {
+             this.numcommande = numcommande;
+         }
+ 
+Index: app/src/main/java/ch/orioninformatique/gstocktdm/activitycommandeclientListActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ch/orioninformatique/gstocktdm/activitycommandeclientListActivity.java	(revision 6505198bc9124a87913433d02cf2a6652b701021)
++++ app/src/main/java/ch/orioninformatique/gstocktdm/activitycommandeclientListActivity.java	(date 1602489908127)
+@@ -181,11 +181,11 @@
+                                     String numarticle = d.getString("numarticle");
+                                     String ean = d.getString("ean");
+                                     String designation = d.getString("designation");
+-                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
++                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"",0);
+                                     commandes = db.getCommandesClient(numligne, numbulletin);
+                                     if (commandes == null) {
+                                         ean = ean.replaceAll("\\s","");
+-                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin);
++                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin,0);
+                                         db.addCommandeClient(commandes);
+                                     }else  {
+                                         ean = ean.replaceAll("\\s","");
+Index: app/src/main/java/ch/orioninformatique/gstocktdm/activitycommandeFournList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ch/orioninformatique/gstocktdm/activitycommandeFournList.java	(revision 6505198bc9124a87913433d02cf2a6652b701021)
++++ app/src/main/java/ch/orioninformatique/gstocktdm/activitycommandeFournList.java	(date 1602490859217)
+@@ -163,16 +163,16 @@
+                                     String numarticle = d.getString("numarticle");
+                                     String ean = d.getString("ean");
+                                     String designation = d.getString("designation");
+-                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"");
++                                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0,"",0);
+                                     commandes = db.getCommandesFourn(numligne, numbulletin);
+                                     if (commandes == null) {
+                                         ean = ean.replaceAll("\\s","");
+-                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), Integer.parseInt(livre), designation, Integer.parseInt(numligne),numbulletin);
++                                        commandes = new Commandes(0, ean, numarticle, Integer.parseInt(qt), 0, designation, Integer.parseInt(numligne),numbulletin,Integer.parseInt(livre));
+                                         db.addCommandeFourn(commandes);
+                                     } else  {
+                                         ean = ean.replaceAll("\\s","");
+                                         commandes.setEan(ean);
+-                                        commandes.setLivre(Integer.parseInt(livre));
++                                        commandes.setDejalivre(Integer.parseInt(livre));
+                                         db.updateeancommandefourn(commandes);
+ 
+                                     }
+Index: app/src/main/java/ch/orioninformatique/gstocktdm/activityDetailCommandeFour.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/ch/orioninformatique/gstocktdm/activityDetailCommandeFour.java	(revision 6505198bc9124a87913433d02cf2a6652b701021)
++++ app/src/main/java/ch/orioninformatique/gstocktdm/activityDetailCommandeFour.java	(date 1602493663778)
+@@ -119,8 +119,10 @@
+                 Integer qt = commandeList.get(i).qt;
+                 artic.put("qtcommande", qt.toString() );
+                 Integer livre = commandeList.get(i).livre;
+-                artic.put("qtlivre", livre.toString());
+-                Integer solde = qt -livre;
++                Integer dejalivre = commandeList.get(i).dejalivre;
++                Integer totallivraison = livre + dejalivre;
++                artic.put("qtlivre", totallivraison.toString());
++                Integer solde = qt -totallivraison;
+                 artic.put("solde", solde.toString());
+                 detailList.add(artic);
+             }
+@@ -243,8 +245,10 @@
+                 Integer qt = commandeList.get(i).qt;
+                 artic.put("qtcommande", qt.toString() );
+                 Integer livre = commandeList.get(i).livre;
+-                artic.put("qtlivre", livre.toString());
+-                Integer solde = qt -livre;
++                Integer dejalivre = commandeList.get(i).dejalivre;
++                Integer totallivraison = livre + dejalivre;
++                artic.put("qtlivre", totallivraison.toString());
++                Integer solde = qt -totallivraison;
+                 artic.put("solde", solde.toString());
+                 detailList.add(artic);
+             }
