@@ -163,7 +163,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                             String numbulletin = a.getString("numbull");
                             String datelivraison = a.getString("datelivraison");
                             String montanttotal = a.getString("montanttotal");
-
+                            db.deleteCommandeClient(numbulletin);
                             HashMap<String, String> artic = new HashMap<>();
                             artic.put("datebulletin", datelivraison);
 
