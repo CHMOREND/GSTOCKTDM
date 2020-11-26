@@ -77,7 +77,46 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
     }
+    public boolean enregistreCommandesclientdetailAvecNumero(String numerocommande, String numero) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db2 = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_COMMANDECLIENT, new String[]{KEY_ID, KEY_EAN, KEY_NUMERO, KEY_QT, KEY_LIVRE, KEY_DESIGNATION, KEY_NUMLIGNE, KEY_COMMANDE}, KEY_COMMANDE + " =? AND " + KEY_NUMERO + " =?",
+                new String[]{numerocommande, numero}, null, null, KEY_NUMLIGNE, null);
 
+        if (cursor.getCount() == 0) {
+            return false;
+        } else {
+            if (cursor.moveToFirst()) {
+                do {
+
+                    Commandes commandes = new Commandes(0, "", "", 0, 0, "", 0, "",0);
+                    commandes.setId(cursor.getInt(0));
+                    commandes.setEan(cursor.getString(1));
+                    commandes.setNumero(cursor.getString(2));
+                    commandes.setQt(cursor.getInt(3));
+                    commandes.setLivre(cursor.getInt(4));
+                    commandes.setDesignation(cursor.getString(5));
+                    commandes.setNumligne(cursor.getInt(6));
+                    commandes.setNumcommande(cursor.getString(7));
+                    if (commandes.getQt() > (commandes.getLivre() +commandes.getDejalivre())){
+                        // enregsistre la livraison
+                        ContentValues values = new ContentValues();
+                        Integer livre = cursor.getInt(4);
+                        livre = livre + 1;
+                        values.put(KEY_LIVRE,livre);
+                        db2.update(TABLE_COMMANDECLIENT,values,KEY_ID + "=?",
+                                new String[]{String.valueOf(cursor.getInt(0))});
+
+                        cursor.moveToLast();
+                        return true;
+                    }
+                } while (cursor.moveToNext());
+
+            }
+            return false;
+        }
+
+    }
     public boolean enregistreCommandesclientdetail(String numero, String ean) {
         SQLiteDatabase db = this.getReadableDatabase();
         SQLiteDatabase db2 = this.getWritableDatabase();

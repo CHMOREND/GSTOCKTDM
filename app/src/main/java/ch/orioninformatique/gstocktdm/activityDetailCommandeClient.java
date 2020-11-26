@@ -9,7 +9,7 @@
 package ch.orioninformatique.gstocktdm;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ButtonBarLayout;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -18,8 +18,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
-import android.hardware.camera2.params.BlackLevelPattern;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
@@ -27,8 +25,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -36,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,14 +39,9 @@ import com.symbol.emdk.EMDKManager;
 import com.symbol.emdk.scanandpair.ScanAndPairManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import javax.net.ssl.SSLEngineResult;
-
-import okhttp3.Response;
 
 public class activityDetailCommandeClient extends AppCompatActivity {
     private FloatingActionButton enregistre;
@@ -142,7 +132,65 @@ public class activityDetailCommandeClient extends AppCompatActivity {
             }
             lv.invalidateViews();
         }
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String codeEan = ((TextView) view.findViewById(R.id.eanarticlecommande)).getText().toString();
+                String numArticle = ((TextView) view.findViewById(R.id.numeroarticlecommande)).getText().toString();
+                Integer solde = Integer.valueOf(((TextView) view.findViewById(R.id.solde)).getText().toString());
+                if (codeEan == "Pas de EAN") {
+                    if (solde > 0) {
+                        AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
+                        mypopup.setTitle("Traitement d'un article sans code EAN ?");
+                        mypopup.setMessage("Voulez-vous ajouter une livraison à cette article sans EAN " + numArticle + " ?");
+                        mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                                if ( db.enregistreCommandesclientdetailAvecNumero(numCommande,numArticle)) {
+                                    Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
+                                    detailList.clear();
+                                    List<Commandes> commandeList = db.getCommandesclientdetail(numCommande);
+
+                                    for (int i = 0; i < commandeList.size(); i++) {
+                                        HashMap<String, String> artic = new HashMap<>();
+                                        artic.put("numarticle", commandeList.get(i).getNumero());
+                                        artic.put("designation", commandeList.get(i).getDesignation());
+                                        String ean = commandeList.get(i).getEan();
+                                        if (Objects.equals(ean, "")) {
+                                            artic.put("ean", "Pas de EAN");
+
+                                        } else {
+                                            artic.put("ean", ean);
+                                        }
+                                        Integer qt = commandeList.get(i).qt;
+                                        artic.put("qtcommande", qt.toString());
+                                        Integer livre = commandeList.get(i).livre;
+                                        artic.put("qtlivre", livre.toString());
+                                        Integer solde = qt - livre;
+                                        artic.put("solde", solde.toString());
+                                        detailList.add(artic);
+                                    }
+                                    lv.invalidateViews();
+                                }
+
+                            }
+                        });
+                        mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        mypopup.show();
+                    }
+                    } else {
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
+                    Toast.makeText(activity, "Cette article a un code ean, veuillez le scanner ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         enregistre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
