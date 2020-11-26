@@ -313,6 +313,7 @@ public class activity_inventaire extends AppCompatActivity {
             Log.e(TAG, "Réponse de url : " + jsonStr);
             if (jsonStr != null) {
                 try {
+                    pasDeReponseDuServeur = false;
                     if (jsonStr.contains("false")) {
                         // le code ean n'a pas été retrouvé
                         QtStock.setText("0");
