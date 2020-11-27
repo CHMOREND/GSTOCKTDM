@@ -65,19 +65,6 @@
             android:text="Montant"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:fadingEdge="horizontal|vertical"
-            android:fitsSystemWindows="true"
-            android:paddingLeft="10dp"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

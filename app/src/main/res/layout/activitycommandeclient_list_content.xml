@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/numbulletin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-android:textColor="@color/colorPrimary"
         android:text="@string/_15820202"
         android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="@color/colorPrimary"
         android:textSize="12dp" />
 
     <TextView
