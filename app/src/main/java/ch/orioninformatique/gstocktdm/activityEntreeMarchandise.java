@@ -18,7 +18,7 @@ public class activityEntreeMarchandise extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_entree_marchandise);
-        this.retourClient = findViewById(R.id.btRetourClient);
+        //this.retourClient = findViewById(R.id.btRetourClient);
         this.commandesFourniiseurs = findViewById(R.id.btCommandeFournisseur);
         commandesFourniiseurs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,7 +29,7 @@ public class activityEntreeMarchandise extends AppCompatActivity {
 
             }
         });
-
+/*
         retourClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +39,8 @@ public class activityEntreeMarchandise extends AppCompatActivity {
 
             }
         });
+
+ */
     }
 
     @Override

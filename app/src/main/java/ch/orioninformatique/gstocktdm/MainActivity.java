@@ -77,12 +77,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         btentreemarchandise.setOnClickListener(new View.OnClickListener() {
-            @Override
+            /*@Override
             public void onClick(View v) {
                 Intent inventaireAcitivty = new Intent(getApplicationContext(),activityEntreeMarchandise.class);
                 startActivity(inventaireAcitivty);
                 finish();
             }
+
+
+             */
+                @Override
+                public void onClick(View v) {
+                    Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeFournList.class);
+                    startActivity(inventaireAcitivty);
+                    finish();
+
+                }
+         
         });
         btsortiemarchandise.setOnClickListener(new View.OnClickListener() {
             @Override

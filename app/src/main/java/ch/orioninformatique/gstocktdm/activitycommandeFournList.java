@@ -225,7 +225,7 @@ public class activitycommandeFournList extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent inventaireAcitivty = new Intent(getApplicationContext(), activityEntreeMarchandise.class);
+        Intent inventaireAcitivty = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(inventaireAcitivty);
         finish();
 
