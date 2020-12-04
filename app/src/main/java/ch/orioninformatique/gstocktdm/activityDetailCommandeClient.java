@@ -113,6 +113,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                 HashMap<String, String> artic = new HashMap<>();
                 artic.put("numarticle", commandeList.get(i).getNumero());
                 artic.put("designation", commandeList.get(i).getDesignation());
+
                 String ean = commandeList.get(i).getEan();
                 if (Objects.equals(ean, "")){
                     artic.put("ean", "Pas de EAN");
