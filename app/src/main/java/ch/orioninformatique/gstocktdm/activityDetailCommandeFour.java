@@ -125,6 +125,7 @@ public class activityDetailCommandeFour extends AppCompatActivity {
                 Integer solde = qt -totallivraison;
                 artic.put("solde", solde.toString());
                 detailList.add(artic);
+                artic.clear();
             }
             lv.invalidateViews();
         }
@@ -219,38 +220,30 @@ public class activityDetailCommandeFour extends AppCompatActivity {
         }
     };
     private void displayScanResult(Intent initiatingIntent, String howDataReceived) throws InterruptedException {
-        String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
+        //String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-        String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+        //String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
         if (decodedData.length() == 12) {
             decodedData = "0" + decodedData;
         }
         // recherche du code EAN dans la commande et enregistre la sortie
         if (db.enregistreCommandesfourndetail(numCommande,decodedData)) {
             Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
-            detailList.clear();
-            List<Commandes> commandeList = db.getCommandesfourndetail(numCommande);
+            for (int i = 0; i < detailList.size(); i++){
+                String ean =  detailList.get(i).get("ean").toString();
+                Integer solde = Integer.valueOf(detailList.get(i).get("solde"));
+                Integer livre = Integer.valueOf(detailList.get(i).get("qtlivre"));
+                if ((ean.equals(decodedData)) && solde > 0){
+                    solde = solde-1;
+                    HashMap<String, String> artic = new HashMap<>();
+                    artic = detailList.get(i);
+                    artic.put("solde",solde.toString());
+                    livre = livre +1;
+                    artic.put("qtlivre",livre.toString());
+                    detailList.set(i,artic);
 
-            for (int i = 0;i < commandeList.size();i++) {
-                HashMap<String, String> artic = new HashMap<>();
-                artic.put("numarticle", commandeList.get(i).getNumero());
-                artic.put("designation", commandeList.get(i).getDesignation());
-                String ean = commandeList.get(i).getEan();
-                if (Objects.equals(ean, "")){
-                    artic.put("ean", "Pas de EAN");
-
-                } else {
-                    artic.put("ean", ean);
+                    break;
                 }
-                Integer qt = commandeList.get(i).qt;
-                artic.put("qtcommande", qt.toString() );
-                Integer livre = commandeList.get(i).livre;
-                Integer dejalivre = commandeList.get(i).dejalivre;
-                Integer totallivraison = livre + dejalivre;
-                artic.put("qtlivre", totallivraison.toString());
-                Integer solde = qt -totallivraison;
-                artic.put("solde", solde.toString());
-                detailList.add(artic);
             }
 
             lv.invalidateViews();

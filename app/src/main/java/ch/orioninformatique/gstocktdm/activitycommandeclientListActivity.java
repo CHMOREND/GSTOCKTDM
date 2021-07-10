@@ -163,7 +163,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                             String numbulletin = a.getString("numbull");
                             String datelivraison = a.getString("datelivraison");
                             String montanttotal = a.getString("montanttotal");
-                            db.deleteCommandeClient(numbulletin);
+                            //db.deleteCommandeClient(numbulletin);
                             HashMap<String, String> artic = new HashMap<>();
                             artic.put("datebulletin", datelivraison);
 
@@ -178,6 +178,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     String numligne = d.getString("numligne");
                                     String qt = d.getString("qt");
                                     String prix = d.getString("prix");
+                                    String livre = d.getString("livre");
                                     String numarticle = d.getString("numarticle");
                                     String ean = d.getString("ean");
                                     String designation = d.getString("designation");
@@ -190,6 +191,7 @@ public class activitycommandeclientListActivity extends AppCompatActivity {
                                     }else  {
                                         ean = ean.replaceAll("\\s","");
                                         commandes.setEan(ean);
+                                        commandes.setDejalivre(Integer.parseInt(livre));
                                         db.updateeancommandeclient(commandes);
                                     }
                                 }

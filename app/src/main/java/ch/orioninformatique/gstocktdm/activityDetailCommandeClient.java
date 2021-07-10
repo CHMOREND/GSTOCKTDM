@@ -54,7 +54,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
     private ScanAndPairManager scanAndPairManager;
     private String decodedData;
     private String numCommande;
-    private ListAdapter adapter;
+    //private ListAdapter adapter;
     private DatabaseHelper db;
     private String TAG = MainActivity.class.getSimpleName();
     private String url="";
@@ -74,7 +74,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
         registerReceiver(myBroadcastReceiver, filter);
         db = new DatabaseHelper(activity);
 
-        adapter = new SimpleAdapter(
+        ListAdapter adapter = new SimpleAdapter(
                 activityDetailCommandeClient.this,detailList,
                 R.layout.list_item_commandes,new String[]{"numarticle","qtcommande","qtlivre","solde","designation","ean"},
                 new int[]{R.id.numeroarticlecommande,R.id.qtcommande,R.id.qtlivre,R.id.solde,R.id.designationarticlecommande,R.id.eanarticlecommande} );
@@ -125,73 +125,16 @@ public class activityDetailCommandeClient extends AppCompatActivity {
                 Integer qt = commandeList.get(i).qt;
                 artic.put("qtcommande", qt.toString() );
                 Integer livre = commandeList.get(i).livre;
-                artic.put("qtlivre", livre.toString());
-                Integer solde = qt -livre;
-
+                Integer dejalivre = commandeList.get(i).dejalivre;
+                Integer totallivraison = livre + dejalivre;
+                artic.put("qtlivre", totallivraison.toString());
+                Integer solde = qt -totallivraison;
                 artic.put("solde", solde.toString());
                 detailList.add(artic);
             }
             lv.invalidateViews();
         }
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String codeEan = ((TextView) view.findViewById(R.id.eanarticlecommande)).getText().toString();
-                String numArticle = ((TextView) view.findViewById(R.id.numeroarticlecommande)).getText().toString();
-                Integer solde = Integer.valueOf(((TextView) view.findViewById(R.id.solde)).getText().toString());
-                if (codeEan == "Pas de EAN") {
-                    if (solde > 0) {
-                        AlertDialog.Builder mypopup = new AlertDialog.Builder(activity);
-                        mypopup.setTitle("Traitement d'un article sans code EAN ?");
-                        mypopup.setMessage("Voulez-vous ajouter une livraison à cette article sans EAN " + numArticle + " ?");
-                        mypopup.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                                if ( db.enregistreCommandesclientdetailAvecNumero(numCommande,numArticle)) {
-                                    Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
-                                    detailList.clear();
-                                    List<Commandes> commandeList = db.getCommandesclientdetail(numCommande);
-
-                                    for (int i = 0; i < commandeList.size(); i++) {
-                                        HashMap<String, String> artic = new HashMap<>();
-                                        artic.put("numarticle", commandeList.get(i).getNumero());
-                                        artic.put("designation", commandeList.get(i).getDesignation());
-                                        String ean = commandeList.get(i).getEan();
-                                        if (Objects.equals(ean, "")) {
-                                            artic.put("ean", "Pas de EAN");
-
-                                        } else {
-                                            artic.put("ean", ean);
-                                        }
-                                        Integer qt = commandeList.get(i).qt;
-                                        artic.put("qtcommande", qt.toString());
-                                        Integer livre = commandeList.get(i).livre;
-                                        artic.put("qtlivre", livre.toString());
-                                        Integer solde = qt - livre;
-                                        artic.put("solde", solde.toString());
-                                        detailList.add(artic);
-                                    }
-                                    lv.invalidateViews();
-                                }
-
-                            }
-                        });
-                        mypopup.setNegativeButton("NON", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                        mypopup.show();
-                    }
-                    } else {
-                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                    toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
-                    Toast.makeText(activity, "Cette article a un code ean, veuillez le scanner ", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         enregistre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,37 +226,34 @@ public class activityDetailCommandeClient extends AppCompatActivity {
         }
     };
     private void displayScanResult(Intent initiatingIntent, String howDataReceived) throws InterruptedException {
-        String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
+        //String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-        String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+        //String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
         if (decodedData.length() == 12) {
             decodedData = "0" + decodedData;
         }
         // recherche du code EAN dans la commande et enregistre la sortie
         if ( db.enregistreCommandesclientdetail(numCommande,decodedData)) {
              Toast.makeText(activity, "l'article a été enregistré dans la commande", Toast.LENGTH_SHORT).show();
-            detailList.clear();
-            List<Commandes> commandeList = db.getCommandesclientdetail(numCommande);
 
-            for (int i = 0;i < commandeList.size();i++) {
-                HashMap<String, String> artic = new HashMap<>();
-                artic.put("numarticle", commandeList.get(i).getNumero());
-                artic.put("designation", commandeList.get(i).getDesignation());
-                String ean = commandeList.get(i).getEan();
-                if (Objects.equals(ean, "")){
-                    artic.put("ean", "Pas de EAN");
+        for (int i = 0; i < detailList.size(); i++){
+             String ean =  detailList.get(i).get("ean").toString();
+            Integer solde = Integer.valueOf(detailList.get(i).get("solde"));
+            Integer livre = Integer.valueOf(detailList.get(i).get("qtlivre"));
+            if ((ean.equals(decodedData)) && solde > 0){
+                    solde = solde-1;
+                    HashMap<String, String> artic = new HashMap<>();
+                    artic = detailList.get(i);
+                    artic.put("solde",solde.toString());
+                    livre = livre +1;
+                    artic.put("qtlivre",livre.toString());
+                    detailList.set(i,artic);
 
-                } else {
-                    artic.put("ean", ean);
+                    break;
                 }
-                Integer qt = commandeList.get(i).qt;
-                artic.put("qtcommande", qt.toString() );
-                Integer livre = commandeList.get(i).livre;
-                artic.put("qtlivre", livre.toString());
-                Integer solde = qt -livre;
-                artic.put("solde", solde.toString());
-                detailList.add(artic);
-            }
+        }
+
+
 
             lv.invalidateViews();
         } else {
@@ -371,7 +311,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
             if (ok){
                 // efface la commande
                 db.deleteCommandeClient(numCommande);
-                Toast.makeText(activity, "La commande " + numCommande +" a bien été enregistré !!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "La commande " + numCommande +" a bien été enregistrée !!!", Toast.LENGTH_SHORT).show();
 
                 Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeclientListActivity.class);
                 startActivity(inventaireAcitivty);
@@ -379,7 +319,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
             } else {
                 ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 300);
-                Toast.makeText(activity, "La commande " + numCommande +" n'a pas été enregistré !!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "La commande " + numCommande +" n'a pas été enregistrée !!!", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -388,6 +328,7 @@ public class activityDetailCommandeClient extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         Intent inventaireAcitivty = new Intent(getApplicationContext(), activitycommandeclientListActivity.class);
         startActivity(inventaireAcitivty);
         finish();
